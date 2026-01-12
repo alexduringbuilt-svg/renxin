@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>我的演艺时刻</title>
+    <style>
+        /* --- 1. 核心布局设置 --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: #000;
+            font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", sans-serif;
+            color: #fff;
+            overflow: hidden; /* 禁止普通滚动 */
+        }
+
+        /* 全屏滚动容器 */
+        .h5-container {
+            width: 100vw;
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory; /* 强制垂直吸附 */
+            scroll-behavior: smooth;
+        }
+
+        /* 每一页的通用样式 */
+        .page {
+            width: 100vw;
+            height: 100vh;
+            scroll-snap-align: start; /* 滚动停止时对齐顶部 */
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 背景图层 (模糊效果) */
+        .bg-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background-size: cover;
+            background-position: center;
+            filter: blur(20px) brightness(0.6); /* 毛玻璃+压暗 */
+            transform: scale(1.1); /* 防止模糊边缘露白 */
+        }
+
+        /* --- 2. 页面元素样式 --- */
+        
+        /* 向上滑动的提示箭头 */
+        .arrow-up {
+            position: absolute; bottom: 20px; left: 50%;
+            transform: translateX(-50%);
+            width: 30px; height: 30px;
+            border-top: 2px solid rgba(255,255,255,0.7);
+            border-left: 2px solid rgba(255,255,255,0.7);
+            transform: translateX(-50%) rotate(45deg);
+            animation: arrowAnim 1.5s infinite;
+            z-index: 10;
+        }
+
+        @keyframes arrowAnim {
+            0% { transform: translateX(-50%) rotate(45deg) translate(0, 0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(-50%) rotate(45deg) translate(-10px, -10px); opacity: 0; }
+        }
+
+        /* 文本框样式 */
+        .text-box {
+            position: absolute; bottom: 80px; left: 20px; right: 20px;
+            text-align: left;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            z-index: 5;
+        }
+        .text-box h2 { font-size: 24px; margin-bottom: 8px; color: #f1c40f; }
+        .text-box p { font-size: 14px; line-height: 1.5; color: #ddd; }
+
+        /* 视频样式 */
+        .video-wrapper {
+            width: 100%;
+            max-width: 600px; /* 限制最大宽度 */
+            z-index: 2;
+        }
+        video {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* 封面页特有样式 */
+        .cover-content {
+            text-align: center;
+            z-index: 5;
+        }
+        .cover-avatar {
+            width: 120px; height: 120px; border-radius: 50%;
+            border: 4px solid #fff; margin-bottom: 20px;
+            object-fit: cover;
+            box-shadow: 0 0 20px rgba(255,255,255,0.3);
+        }
+        .cover-title { font-size: 32px; font-weight: bold; margin-bottom: 10px; letter-spacing: 2px; }
+        .cover-subtitle { font-size: 16px; background: #f1c40f; color: #000; padding: 5px 15px; border-radius: 20px; display: inline-block; }
+
+        /* 图集页网格 */
+        .grid-gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            padding: 20px;
+            width: 100%;
+            max-height: 70vh;
+            overflow-y: auto; /* 允许图集内部滚动 */
+        }
+        .grid-img {
+            width: 100%; height: 150px; object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        /* 底部按钮 */
+        .btn-call {
+            background: linear-gradient(to right, #e67e22, #f1c40f);
+            color: #fff; padding: 12px 40px; border-radius: 30px;
+            text-decoration: none; font-weight: bold; margin-top: 20px;
+            display: inline-block;
+            box-shadow: 0 5px 15px rgba(230, 126, 34, 0.4);
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="h5-container">
+
+    <section class="page" style="background-image: url('1.jpg'); background-size: cover; background-position: center;">
+        <div style="position:absolute; inset:0; background:rgba(0,0,0,0.4);"></div>
+        
+        <div class="cover-content">
+            <img src="1.jpg" class="cover-avatar" alt="头像">
+            <h1 class="cover-title">张三 & 毛毛</h1>
+            <div class="cover-subtitle">央视特邀萌宠嘉宾 🐾</div>
+            <p style="margin-top:20px; font-size:14px; color:#ddd;">向上滑动，查看精彩演出</p>
+        </div>
+        <div class="arrow-up"></div>
+    </section>
+
+
+    <section class="page">
+        <div class="bg-layer" style="background-image: url('1.jpg');"></div>
+        
+        <div class="video-wrapper">
+            <video controls playsinline poster="1.jpg" src="v1.mp4"></video>
+        </div>
+
+        <div class="text-box">
+            <h2>综艺盛典开场秀 ✨</h2>
+            <p>这是我们在央视舞台的首次亮相，毛毛完美的配合赢得了全场掌声。每一个动作背后，都是无数次默契的训练。</p>
+        </div>
+        <div class="arrow-up"></div>
+    </section>
+
+
+    <section class="page">
+        <div class="bg-layer" style="background-image: url('2.jpg');"></div>
+        
+        <div class="video-wrapper">
+            <video controls playsinline poster="2.jpg" src="v2.mp4"></video>
+        </div>
+
+        <div class="text-box">
+            <h2>超高难度互动 🚀</h2>
+            <p>没有任何牵引绳，全靠眼神交流。这个飞跃动作是我们最拿手的绝活，展现了狗狗惊人的爆发力。</p>
+        </div>
+        <div class="arrow-up"></div>
+    </section>
+
+
+    <section class="page">
+        <div class="bg-layer" style="background-image: url('3.jpg');"></div>
+        
+        <h2 style="margin-bottom:20px; z-index:2; text-shadow:0 2px 5px #000;">📸 精彩瞬间</h2>
+        
+        <div class="grid-gallery" style="z-index: 2;">
+            <img src="3.jpg" class="grid-img">
+            <img src="4.jpg" class="grid-img">
+            <img src="5.jpg" class="grid-img">
+            <img src="6.jpg" class="grid-img">
+            <img src="7.jpg" class="grid-img">
+            <img src="8.jpg" class="grid-img">
+        </div>
+        
+        <div class="text-box" style="bottom: 40px;">
+            <p>记录每一个闪光的时刻（此区域可上下滑动查看更多图片）</p>
+        </div>
+        <div class="arrow-up"></div>
+    </section>
+
+
+    <section class="page" style="background: #222;">
+        <div class="cover-content">
+            <h2 style="color:#f1c40f; margin-bottom:10px;">期待与您合作</h2>
+            <p style="color:#aaa;">综艺录制 / 商业演出 / 影视指导</p>
+            
+            <div style="margin: 40px 0;">
+                <h1 style="font-size:36px;">138-XXXX-XXXX</h1>
+                <p style="font-size:12px; color:#666; margin-top:5px;">(微信同号)</p>
+            </div>
+
+            <a href="tel:13800000000" class="btn-call">📞 立即联系</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    // --- 智能脚本：滑动暂停视频 ---
+    // 这个脚本会检测哪个页面现在正显示在屏幕上
+    // 如果视频页面滑走了，它会自动暂停视频，防止声音乱放
+    
+    const videos = document.querySelectorAll('video');
+    const container = document.querySelector('.h5-container');
+
+    // 监听滚动结束
+    let isScrolling;
+    container.addEventListener('scroll', function ( event ) {
+        window.clearTimeout( isScrolling );
+        isScrolling = setTimeout(function() {
+            checkVideoVisibility();
+        }, 100); // 滚动停止100ms后检测
+    }, false);
+
+    function checkVideoVisibility() {
+        videos.forEach(video => {
+            const rect = video.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+            
+            // 如果视频不在屏幕中心区域，就暂停
+            if (rect.top < 0 || rect.bottom > windowHeight) {
+                video.pause();
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
