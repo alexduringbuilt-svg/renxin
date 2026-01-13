@@ -50,54 +50,29 @@
         .skills-box { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 30px; }
         .skill-tag { background: rgba(212,175,55,0.08); color: #8a7018; padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; }
 
-        /* --- 3. 时间轴 (精准对齐) --- */
+        /* --- 3. 时间轴 --- */
         .timeline { position: relative; margin-top: 20px; }
         .timeline-year-group { display: flex; margin-bottom: 30px; align-items: flex-start; }
-        
-        /* 宽度控制 */
         .year-label { flex: 0 0 75px; font-size: 18px; font-weight: 800; color: #ccc; font-family: Arial, sans-serif; line-height: 1; }
         .year-content { flex: 1; padding-left: 30px; border-left: 1px solid #eee; padding-bottom: 5px; }
-
         .t-item { position: relative; margin-bottom: 15px; }
         .t-item:last-child { margin-bottom: 0; }
         .t-item::before { 
             content: ''; position: absolute; left: -34.5px; top: 5px; 
             width: 9px; height: 9px; background: #fff; border: 2px solid var(--gold); border-radius: 50%; z-index: 2; 
         }
-
         .t-month { font-size: 12px; color: var(--gold); font-weight: bold; display: inline-block; margin-right: 8px;}
         .t-event { font-size: 14px; color: #333; line-height: 1.5; display: inline; }
         .t-channel { font-size: 12px; color: #999; margin-left: 5px; }
 
-        /* --- [核心修改] 优雅文字版结尾 --- */
-        .timeline-end-text {
-            position: relative;
-            /* 对齐内容区域: 75px(左侧宽) + 30px(padding) = 105px */
-            padding-left: 105px; 
-            margin-top: -10px; /* 拉近与上一条的距离 */
-        }
-        
-        /* 1. 衔接竖线：从上一段自然垂下 */
+        /* 优雅文字结尾 */
+        .timeline-end-text { position: relative; padding-left: 105px; margin-top: -10px; }
         .timeline-end-text::before {
-            content: '';
-            position: absolute;
-            left: 75px; /* 严格对齐上面的竖线 */
-            top: -20px;
-            width: 1px; 
-            height: 35px; /* 长度刚好指到文字旁边 */
-            /* 渐变：灰 -> 金 */
+            content: ''; position: absolute; left: 75px; top: -20px; width: 1px; height: 35px;
             background: linear-gradient(to bottom, #eee 0%, var(--gold) 100%);
         }
-
-        /* 2. 文字样式：衬线体、金色、优雅 */
         .end-text-style {
-            font-family: "Songti SC", "SimSun", "STSong", serif; /* 强制宋体，营造高级感 */
-            font-size: 13px;
-            color: #bfa15f; /* 稍微暗一点的哑光金 */
-            letter-spacing: 2px;
-            font-style: italic;
-            position: relative;
-            top: 5px; /* 微调垂直位置 */
+            font-family: "Songti SC", "SimSun", "STSong", serif; font-size: 13px; color: #bfa15f; letter-spacing: 2px; font-style: italic; position: relative; top: 5px;
         }
 
         /* --- 4. 视频 & 图片 --- */
@@ -147,7 +122,6 @@
         </div>
 
         <div class="timeline">
-            
             <div class="timeline-year-group" data-aos="fade-up">
                 <div class="year-label">2016</div>
                 <div class="year-content">
@@ -201,7 +175,6 @@
             <div class="timeline-end-text" data-aos="fade-in">
                 <div class="end-text-style">更多精彩 未完待续...</div>
             </div>
-
         </div>
     </div>
 
@@ -215,6 +188,10 @@
         <div class="video-card" data-aos="fade-left" data-aos-delay="200"><video controls poster="https://placehold.co/600x400/444/fff?text=Video+3"><source src="./v3.mp4"></video><div class="play-btn"></div></div>
         <div class="video-card" data-aos="fade-left" data-aos-delay="300"><video controls poster="https://placehold.co/600x400/555/fff?text=Video+4"><source src="./v4.mp4"></video><div class="play-btn"></div></div>
         <div class="video-card" data-aos="fade-left" data-aos-delay="400"><video controls poster="https://placehold.co/600x400/666/fff?text=Video+5"><source src="./v5.mp4"></video><div class="play-btn"></div></div>
+        
+        <div class="video-card" data-aos="fade-left" data-aos-delay="500"><video controls poster="https://placehold.co/600x400/777/fff?text=Video+6"><source src="./v6.mp4"></video><div class="play-btn"></div></div>
+        <div class="video-card" data-aos="fade-left" data-aos-delay="600"><video controls poster="https://placehold.co/600x400/888/fff?text=Video+7"><source src="./v7.mp4"></video><div class="play-btn"></div></div>
+        <div class="video-card" data-aos="fade-left" data-aos-delay="700"><video controls poster="https://placehold.co/600x400/999/fff?text=Video+8"><source src="./v8.mp4"></video><div class="play-btn"></div></div>
     </div>
 
     <div class="section-header" data-aos="fade-right">
