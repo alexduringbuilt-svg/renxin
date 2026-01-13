@@ -18,60 +18,27 @@
         
         .container { max-width: 550px; margin: 0 auto; background: #fff; min-height: 100vh; padding-bottom: 60px; box-shadow: 0 0 50px rgba(0,0,0,0.03); position: relative; }
 
-        /* --- 1. 顶部 Header (四周虚化 + 中心清晰版) --- */
+        /* --- 1. 顶部 Header --- */
         header { 
-            height: 250px; 
-            padding: 25px; 
+            height: 250px; padding: 25px; 
             display: flex; flex-direction: column; justify-content: flex-end; 
-            position: relative; 
-            overflow: hidden; 
-            
-            /* [底图层] 原始清晰照片 */
+            position: relative; overflow: hidden; 
             background-image: url('./yetou.png'); 
-            /* 建议用 center center 保证人脸在正中间，配合四周虚化 */
-            background-position: center center; 
-            background-size: cover;
-            z-index: 0;
+            background-position: center center; background-size: cover; z-index: 0;
         }
-
-        /* [模糊层] 四周虚化 */
         header::before { 
-            content: ''; 
-            position: absolute; 
-            top: 0; left: 0; 
-            width: 100%; height: 100%; 
-            z-index: 1;
-            
-            /* 加大模糊力度：25px */
-            backdrop-filter: blur(25px); 
-            -webkit-backdrop-filter: blur(25px); 
-
-            /* [关键魔法] 径向蒙版 (Radial Gradient) */
-            /* circle at center: 从中心开始画圆 */
-            /* transparent 25%: 中心 25% 的区域是透明的（即不显示模糊层 -> 显示清晰底图） */
-            /* black 80%: 到 80% 的外围区域变成黑色（即显示模糊层） */
-            /* 效果：中间清晰，向四周逐渐变糊 */
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); 
             -webkit-mask-image: radial-gradient(circle at center, transparent 25%, black 80%);
             mask-image: radial-gradient(circle at center, transparent 25%, black 80%);
-            
             pointer-events: none;
         }
-
-        /* [暗角层] 底部稍微加黑，保证文字能看清 */
         header::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 2;
-            /* 仅在底部加一点点黑渐变 */
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;
             background: linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, 0.8) 100%);
             pointer-events: none;
         }
-        
-        /* [内容层] 文字 */
         .header-content { position: relative; z-index: 3; }
-        
         h1 { margin: 0; font-size: 34px; font-weight: 300; line-height: 1.1; letter-spacing: 1px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); color: #fff; }
         h1 strong { font-weight: 800; color: var(--gold); }
         .subtitle { margin-top: 10px; opacity: 0.95; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; display: flex; align-items: center; color: rgba(255,255,255,0.9); text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
@@ -83,18 +50,55 @@
         .skills-box { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 30px; }
         .skill-tag { background: rgba(212,175,55,0.08); color: #8a7018; padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; }
 
-        /* --- 3. 紧凑型时间轴 --- */
+        /* --- 3. 时间轴 (精准对齐) --- */
         .timeline { position: relative; margin-top: 20px; }
-        .timeline-year-group { display: flex; margin-bottom: 25px; align-items: flex-start; }
-        .year-label { flex: 0 0 50px; font-size: 18px; font-weight: 800; color: #ccc; font-family: Arial, sans-serif; line-height: 1; }
-        .year-content { flex: 1; padding-left: 20px; border-left: 1px solid #eee; padding-bottom: 5px; }
-        .t-item { position: relative; margin-bottom: 12px; }
+        .timeline-year-group { display: flex; margin-bottom: 30px; align-items: flex-start; }
+        
+        /* 宽度控制 */
+        .year-label { flex: 0 0 75px; font-size: 18px; font-weight: 800; color: #ccc; font-family: Arial, sans-serif; line-height: 1; }
+        .year-content { flex: 1; padding-left: 30px; border-left: 1px solid #eee; padding-bottom: 5px; }
+
+        .t-item { position: relative; margin-bottom: 15px; }
         .t-item:last-child { margin-bottom: 0; }
-        .t-item::before { content: ''; position: absolute; left: -25px; top: 5px; width: 9px; height: 9px; background: #fff; border: 2px solid var(--gold); border-radius: 50%; z-index: 2; }
-        .t-month { font-size: 12px; color: var(--gold); font-weight: bold; display: inline-block; margin-right: 5px;}
-        .t-event { font-size: 14px; color: #333; line-height: 1.4; display: inline; }
+        .t-item::before { 
+            content: ''; position: absolute; left: -34.5px; top: 5px; 
+            width: 9px; height: 9px; background: #fff; border: 2px solid var(--gold); border-radius: 50%; z-index: 2; 
+        }
+
+        .t-month { font-size: 12px; color: var(--gold); font-weight: bold; display: inline-block; margin-right: 8px;}
+        .t-event { font-size: 14px; color: #333; line-height: 1.5; display: inline; }
         .t-channel { font-size: 12px; color: #999; margin-left: 5px; }
-        .end-mark { text-align: center; margin-top: 30px; margin-bottom: 10px; font-size: 12px; color: #ccc; letter-spacing: 2px; }
+
+        /* --- [核心修改] 优雅文字版结尾 --- */
+        .timeline-end-text {
+            position: relative;
+            /* 对齐内容区域: 75px(左侧宽) + 30px(padding) = 105px */
+            padding-left: 105px; 
+            margin-top: -10px; /* 拉近与上一条的距离 */
+        }
+        
+        /* 1. 衔接竖线：从上一段自然垂下 */
+        .timeline-end-text::before {
+            content: '';
+            position: absolute;
+            left: 75px; /* 严格对齐上面的竖线 */
+            top: -20px;
+            width: 1px; 
+            height: 35px; /* 长度刚好指到文字旁边 */
+            /* 渐变：灰 -> 金 */
+            background: linear-gradient(to bottom, #eee 0%, var(--gold) 100%);
+        }
+
+        /* 2. 文字样式：衬线体、金色、优雅 */
+        .end-text-style {
+            font-family: "Songti SC", "SimSun", "STSong", serif; /* 强制宋体，营造高级感 */
+            font-size: 13px;
+            color: #bfa15f; /* 稍微暗一点的哑光金 */
+            letter-spacing: 2px;
+            font-style: italic;
+            position: relative;
+            top: 5px; /* 微调垂直位置 */
+        }
 
         /* --- 4. 视频 & 图片 --- */
         .section-header { padding: 25px 20px 15px; display: flex; align-items: baseline; justify-content: space-between; border-top: 1px solid #f9f9f9; margin-top: 10px; }
@@ -143,6 +147,47 @@
         </div>
 
         <div class="timeline">
+            
+            <div class="timeline-year-group" data-aos="fade-up">
+                <div class="year-label">2016</div>
+                <div class="year-content">
+                    <div class="t-item">
+                        <span class="t-month">6月</span>
+                        <div class="t-event">《阳光大道》特工训练营 <strong>冠军</strong> <span class="t-channel">CCTV-7</span></div>
+                    </div>
+                    <div class="t-item">
+                        <span class="t-month">6月</span>
+                        <div class="t-event">《好好学习吧》 <span class="t-channel">东南卫视</span></div>
+                    </div>
+                    <div class="t-item">
+                        <span class="t-month">8月</span>
+                        <div class="t-event">《幸福的味道》互动表演 <span class="t-channel">北京卫视</span></div>
+                    </div>
+                    <div class="t-item">
+                        <span class="t-month">12月</span>
+                        <div class="t-event">《黄金100秒》竞技节目 <span class="t-channel">CCTV-3</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-year-group" data-aos="fade-up">
+                <div class="year-label">2017</div>
+                <div class="year-content">
+                    <div class="t-item">
+                        <span class="t-month">1月</span>
+                        <div class="t-event">《幸福账单》竞技节目 <span class="t-channel">CCTV-3</span></div>
+                    </div>
+                    <div class="t-item">
+                        <span class="t-month">7月</span>
+                        <div class="t-event">《综艺盛典》宠物秀 <span class="t-channel">CCTV-3</span></div>
+                    </div>
+                    <div class="t-item">
+                        <span class="t-month">9月</span>
+                        <div class="t-event">《向幸福出发》情感访谈 <span class="t-channel">CCTV-3</span></div>
+                    </div>
+                </div>
+            </div>
+
             <div class="timeline-year-group" data-aos="fade-up">
                 <div class="year-label">2018</div>
                 <div class="year-content">
@@ -152,45 +197,11 @@
                     </div>
                 </div>
             </div>
-            <div class="timeline-year-group" data-aos="fade-up">
-                <div class="year-label">2017</div>
-                <div class="year-content">
-                    <div class="t-item">
-                        <span class="t-month">9月</span>
-                        <div class="t-event">《向幸福出发》情感访谈 <span class="t-channel">CCTV-3</span></div>
-                    </div>
-                    <div class="t-item">
-                        <span class="t-month">7月</span>
-                        <div class="t-event">《综艺盛典》宠物秀 <span class="t-channel">CCTV-3</span></div>
-                    </div>
-                    <div class="t-item">
-                        <span class="t-month">1月</span>
-                        <div class="t-event">《幸福账单》竞技节目 <span class="t-channel">CCTV-3</span></div>
-                    </div>
-                </div>
+
+            <div class="timeline-end-text" data-aos="fade-in">
+                <div class="end-text-style">更多精彩 未完待续...</div>
             </div>
-            <div class="timeline-year-group" data-aos="fade-up">
-                <div class="year-label">2016</div>
-                <div class="year-content">
-                    <div class="t-item">
-                        <span class="t-month">12月</span>
-                        <div class="t-event">《黄金100秒》竞技节目 <span class="t-channel">CCTV-3</span></div>
-                    </div>
-                    <div class="t-item">
-                        <span class="t-month">8月</span>
-                        <div class="t-event">《幸福的味道》互动表演 <span class="t-channel">北京卫视</span></div>
-                    </div>
-                    <div class="t-item">
-                        <span class="t-month">6月</span>
-                        <div class="t-event">《好好学习吧》 <span class="t-channel">东南卫视</span></div>
-                    </div>
-                    <div class="t-item">
-                        <span class="t-month">6月</span>
-                        <div class="t-event">《阳光大道》特工训练营 <strong>冠军</strong> <span class="t-channel">CCTV-7</span></div>
-                    </div>
-                </div>
-            </div>
-            <div class="end-mark">· END ·</div>
+
         </div>
     </div>
 
@@ -199,18 +210,11 @@
         <div class="section-desc">节目现场</div>
     </div>
     <div class="scroll-wrapper">
-        <div class="video-card" data-aos="fade-left">
-            <video controls poster="https://placehold.co/600x400/222/fff?text=CCTV-7+Champion"><source src="./v1.mp4"></video>
-            <div class="play-btn"></div>
-        </div>
-        <div class="video-card" data-aos="fade-left" data-aos-delay="100">
-            <video controls poster="https://placehold.co/600x400/333/fff?text=Variety+Show"><source src="./v2.mp4"></video>
-            <div class="play-btn"></div>
-        </div>
-        <div class="video-card" data-aos="fade-left" data-aos-delay="200">
-            <video controls poster="https://placehold.co/600x400/444/fff?text=Interaction"><source src="./v3.mp4"></video>
-            <div class="play-btn"></div>
-        </div>
+        <div class="video-card" data-aos="fade-left"><video controls poster="https://placehold.co/600x400/222/fff?text=Video+1"><source src="./v1.mp4"></video><div class="play-btn"></div></div>
+        <div class="video-card" data-aos="fade-left" data-aos-delay="100"><video controls poster="https://placehold.co/600x400/333/fff?text=Video+2"><source src="./v2.mp4"></video><div class="play-btn"></div></div>
+        <div class="video-card" data-aos="fade-left" data-aos-delay="200"><video controls poster="https://placehold.co/600x400/444/fff?text=Video+3"><source src="./v3.mp4"></video><div class="play-btn"></div></div>
+        <div class="video-card" data-aos="fade-left" data-aos-delay="300"><video controls poster="https://placehold.co/600x400/555/fff?text=Video+4"><source src="./v4.mp4"></video><div class="play-btn"></div></div>
+        <div class="video-card" data-aos="fade-left" data-aos-delay="400"><video controls poster="https://placehold.co/600x400/666/fff?text=Video+5"><source src="./v5.mp4"></video><div class="play-btn"></div></div>
     </div>
 
     <div class="section-header" data-aos="fade-right">
@@ -218,30 +222,14 @@
         <div class="section-desc">精彩瞬间</div>
     </div>
     <div class="gallery-grid">
-        <div class="g-item span-wide" data-aos="zoom-in">
-            <img src="https://placehold.co/600x300/eee/999?text=TV+Stage" alt="">
-        </div>
-        <div class="g-item span-tall" data-aos="fade-up" data-aos-delay="100">
-            <img src="https://placehold.co/300x500/eee/999?text=Ren+Xin" alt="">
-        </div>
-        <div class="g-item span-normal" data-aos="fade-left" data-aos-delay="200">
-            <img src="https://placehold.co/300x300/eee/999?text=Dog+1" alt="">
-        </div>
-        <div class="g-item span-normal" data-aos="fade-left" data-aos-delay="300">
-            <img src="https://placehold.co/300x300/eee/999?text=Dog+2" alt="">
-        </div>
-        <div class="g-item span-normal" data-aos="fade-right">
-            <img src="https://placehold.co/300x300/eee/999?text=Training" alt="">
-        </div>
-        <div class="g-item span-normal" data-aos="fade-left">
-            <img src="https://placehold.co/300x300/eee/999?text=Show" alt="">
-        </div>
-        <div class="g-item span-normal" data-aos="fade-up">
-            <img src="https://placehold.co/300x300/eee/999?text=Interaction" alt="">
-        </div>
-        <div class="g-item span-normal" data-aos="fade-up" data-aos-delay="100">
-            <img src="https://placehold.co/300x300/eee/999?text=Award" alt="">
-        </div>
+        <div class="g-item span-wide" data-aos="zoom-in"><img src="https://placehold.co/600x300/eee/999?text=TV+Stage" alt=""></div>
+        <div class="g-item span-tall" data-aos="fade-up" data-aos-delay="100"><img src="https://placehold.co/300x500/eee/999?text=Ren+Xin" alt=""></div>
+        <div class="g-item span-normal" data-aos="fade-left" data-aos-delay="200"><img src="https://placehold.co/300x300/eee/999?text=Dog+1" alt=""></div>
+        <div class="g-item span-normal" data-aos="fade-left" data-aos-delay="300"><img src="https://placehold.co/300x300/eee/999?text=Dog+2" alt=""></div>
+        <div class="g-item span-normal" data-aos="fade-right"><img src="https://placehold.co/300x300/eee/999?text=Training" alt=""></div>
+        <div class="g-item span-normal" data-aos="fade-left"><img src="https://placehold.co/300x300/eee/999?text=Show" alt=""></div>
+        <div class="g-item span-normal" data-aos="fade-up"><img src="https://placehold.co/300x300/eee/999?text=Interaction" alt=""></div>
+        <div class="g-item span-normal" data-aos="fade-up" data-aos-delay="100"><img src="https://placehold.co/300x300/eee/999?text=Award" alt=""></div>
     </div>
 
     <footer>THANKS FOR WATCHING</footer>
