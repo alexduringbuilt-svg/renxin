@@ -2,246 +2,289 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>我的演艺时刻</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>任鑫 - 个人简介</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    
     <style>
-        /* --- 1. 核心布局设置 --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* --- 0. 基础设定 --- */
+        :root {
+            --gold: #d4af37;        /* 香槟金 */
+            --dark: #1a1a1a;        /* 深空灰 */
+            --light-bg: #f9f9f9;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--light-bg); color: #333; overflow-x: hidden; }
         
-        body {
-            background-color: #000;
-            font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", sans-serif;
-            color: #fff;
-            overflow: hidden; /* 禁止普通滚动 */
+        .container { max-width: 550px; margin: 0 auto; background: #fff; min-height: 100vh; padding-bottom: 80px; box-shadow: 0 0 50px rgba(0,0,0,0.03); position: relative; }
+
+        /* --- 1. 顶部 Header (模糊照片背景版) --- */
+        header { 
+            height: 220px; /* 稍微给一点高度，让背景更好看 */
+            background: #111; /* 兜底背景色 */
+            color: #fff; 
+            padding: 25px; 
+            display: flex; flex-direction: column; justify-content: flex-end; 
+            position: relative; 
+            overflow: hidden; /* 关键：裁切掉模糊溢出的边缘 */
         }
 
-        /* 全屏滚动容器 */
-        .h5-container {
-            width: 100vw;
-            height: 100vh;
-            overflow-y: scroll;
-            scroll-snap-type: y mandatory; /* 强制垂直吸附 */
-            scroll-behavior: smooth;
-        }
-
-        /* 每一页的通用样式 */
-        .page {
-            width: 100vw;
-            height: 100vh;
-            scroll-snap-align: start; /* 滚动停止时对齐顶部 */
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* 背景图层 (模糊效果) */
-        .bg-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
+        /* 1.1 背景层：放照片 + 模糊 */
+        header::before { 
+            content: ''; 
+            position: absolute; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%; 
+            
+            /* --- [关键] 请在这里把 'your-photo.jpg' 换成你自己的照片路径 --- */
+            background-image: url('https://placehold.co/600x600/333/fff?text=Photo'); 
+            background-position: center center;
             background-size: cover;
-            background-position: center;
-            filter: blur(20px) brightness(0.6); /* 毛玻璃+压暗 */
-            transform: scale(1.1); /* 防止模糊边缘露白 */
+            
+            /* 模糊滤镜：数值越大越模糊 */
+            filter: blur(12px); 
+            /* 稍微放大一点，防止模糊边缘出现白边 */
+            transform: scale(1.1); 
+            z-index: 0;
         }
 
-        /* --- 2. 页面元素样式 --- */
+        /* 1.2 遮罩层：加一层半透明黑色，防止字看不清 */
+        header::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* 0.4 代表 40% 的黑色透明度 */
+            z-index: 1;
+        }
         
-        /* 向上滑动的提示箭头 */
-        .arrow-up {
-            position: absolute; bottom: 20px; left: 50%;
-            transform: translateX(-50%);
-            width: 30px; height: 30px;
-            border-top: 2px solid rgba(255,255,255,0.7);
-            border-left: 2px solid rgba(255,255,255,0.7);
-            transform: translateX(-50%) rotate(45deg);
-            animation: arrowAnim 1.5s infinite;
-            z-index: 10;
+        /* 内容层：必须在最上面 */
+        .header-content { position: relative; z-index: 2; }
+        
+        h1 { margin: 0; font-size: 34px; font-weight: 300; line-height: 1.1; letter-spacing: 1px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        h1 strong { font-weight: 800; color: var(--gold); }
+        .subtitle { margin-top: 10px; opacity: 0.9; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; display: flex; align-items: center; text-shadow: 0 1px 5px rgba(0,0,0,0.3); }
+        .subtitle::before { content: ''; width: 15px; height: 1px; background: var(--gold); margin-right: 8px; box-shadow: 0 0 5px var(--gold); }
+
+        /* --- 2. 个人简介 --- */
+        .bio-section { padding: 35px 30px 20px; }
+        
+        .bio-quote {
+            font-size: 15px; color: #444; line-height: 1.8; margin-bottom: 20px;
+            text-align: justify; font-weight: 400;
+        }
+        .skills-box { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 30px; }
+        .skill-tag {
+            background: rgba(212,175,55,0.08); color: #8a7018;
+            padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;
         }
 
-        @keyframes arrowAnim {
-            0% { transform: translateX(-50%) rotate(45deg) translate(0, 0); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateX(-50%) rotate(45deg) translate(-10px, -10px); opacity: 0; }
+        /* --- 3. 演艺历程时间轴 --- */
+        .timeline { position: relative; padding-left: 10px; }
+        .timeline::before {
+            content: ''; position: absolute; left: 14px; top: 10px; bottom: 20px;
+            width: 1px; background: #eee;
         }
 
-        /* 文本框样式 */
-        .text-box {
-            position: absolute; bottom: 80px; left: 20px; right: 20px;
-            text-align: left;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-            z-index: 5;
-        }
-        .text-box h2 { font-size: 24px; margin-bottom: 8px; color: #f1c40f; }
-        .text-box p { font-size: 14px; line-height: 1.5; color: #ddd; }
+        .timeline-year-group { margin-bottom: 30px; position: relative; }
 
-        /* 视频样式 */
-        .video-wrapper {
-            width: 100%;
-            max-width: 600px; /* 限制最大宽度 */
-            z-index: 2;
+        .year-label {
+            font-size: 24px; font-weight: 900; color: #eee;
+            position: absolute; left: -10px; top: -15px; z-index: 0;
+            font-family: Arial, sans-serif; letter-spacing: -1px;
         }
-        video {
-            width: 100%;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        
+        .t-item { position: relative; z-index: 1; margin-bottom: 18px; padding-left: 25px; }
+        .t-item::after {
+            content: ''; position: absolute; left: 0; top: 6px;
+            width: 9px; height: 9px; background: #fff; border: 2px solid var(--gold);
+            border-radius: 50%;
         }
 
-        /* 封面页特有样式 */
-        .cover-content {
-            text-align: center;
-            z-index: 5;
-        }
-        .cover-avatar {
-            width: 120px; height: 120px; border-radius: 50%;
-            border: 4px solid #fff; margin-bottom: 20px;
-            object-fit: cover;
-            box-shadow: 0 0 20px rgba(255,255,255,0.3);
-        }
-        .cover-title { font-size: 32px; font-weight: bold; margin-bottom: 10px; letter-spacing: 2px; }
-        .cover-subtitle { font-size: 16px; background: #f1c40f; color: #000; padding: 5px 15px; border-radius: 20px; display: inline-block; }
+        .t-month { font-size: 12px; color: var(--gold); font-weight: bold; margin-bottom: 2px; }
+        .t-event { font-size: 14px; color: #333; line-height: 1.5; font-weight: 500; }
+        .t-channel { font-size: 12px; color: #999; margin-left: 5px; font-weight: normal; }
 
-        /* 图集页网格 */
-        .grid-gallery {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            padding: 20px;
-            width: 100%;
-            max-height: 70vh;
-            overflow-y: auto; /* 允许图集内部滚动 */
+        /* 未完待续样式 */
+        .timeline-more {
+            position: relative;
+            padding-left: 28px;
+            margin-top: -10px;
+            padding-bottom: 10px;
         }
-        .grid-img {
-            width: 100%; height: 150px; object-fit: cover;
-            border-radius: 8px;
-            border: 2px solid rgba(255,255,255,0.2);
+        .timeline-more::before {
+            content: ''; position: absolute; left: 14px; top: -20px; height: 35px;
+            width: 1px; border-left: 2px dashed #ddd; 
+            background: none;
         }
+        .more-dots { color: #ccc; font-size: 24px; line-height: 10px; letter-spacing: 4px; }
+        .more-text { font-size: 12px; color: #bbb; margin-top: 5px; font-style: italic; }
 
-        /* 底部按钮 */
-        .btn-call {
-            background: linear-gradient(to right, #e67e22, #f1c40f);
-            color: #fff; padding: 12px 40px; border-radius: 30px;
-            text-decoration: none; font-weight: bold; margin-top: 20px;
-            display: inline-block;
-            box-shadow: 0 5px 15px rgba(230, 126, 34, 0.4);
-        }
 
+        /* --- 4. 视频 & 图片通用 --- */
+        .section-header { padding: 30px 20px 20px; display: flex; align-items: baseline; justify-content: space-between; border-top: 1px solid #f5f5f5; margin-top: 10px; }
+        .section-title { font-size: 20px; font-weight: 800; color: var(--dark); }
+        .section-desc { font-size: 12px; color: #999; font-style: italic; }
+
+        /* 视频横滑 */
+        .scroll-wrapper { display: flex; overflow-x: auto; gap: 15px; padding: 0 20px 30px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+        .scroll-wrapper::-webkit-scrollbar { display: none; }
+        .video-card { flex: 0 0 85%; scroll-snap-align: center; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.08); position: relative; background: #000; }
+        .video-card video { width: 100%; height: 200px; object-fit: cover; display: block; }
+        .play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; background: rgba(255,255,255,0.3); border-radius: 50%; backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; pointer-events: none; }
+        .play-btn::after { content: ''; border-left: 12px solid #fff; border-top: 8px solid transparent; border-bottom: 8px solid transparent; margin-left: 4px; }
+
+        /* 拼贴画廊 */
+        .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 20px; grid-auto-flow: dense; }
+        .g-item { position: relative; border-radius: 6px; overflow: hidden; background: #eee; }
+        .g-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.8s ease; }
+        .g-item:active img { transform: scale(1.1); }
+        .span-wide { grid-column: span 2; height: 200px; }
+        .span-tall { grid-row: span 2; height: 100%; }
+        .span-normal { height: 150px; }
+
+        /* 底部 */
+        .end-mark { text-align: center; margin-top: 60px; color: #ddd; font-size: 10px; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
-<div class="h5-container">
+<div class="container">
 
-    <section class="page" style="background-image: url('1.jpg'); background-size: cover; background-position: center;">
-        <div style="position:absolute; inset:0; background:rgba(0,0,0,0.4);"></div>
+    <header>
+        <div class="header-content" data-aos="fade-up">
+            <h1>任鑫 <strong>Ren Xin</strong></h1>
+            <div class="subtitle">专业训犬师 / Professional Dog Trainer</div>
+        </div>
+    </header>
+
+    <div class="bio-section">
         
-        <div class="cover-content">
-            <img src="1.jpg" class="cover-avatar" alt="头像">
-            <h1 class="cover-title">张三 & 毛毛</h1>
-            <div class="cover-subtitle">央视特邀萌宠嘉宾 🐾</div>
-            <p style="margin-top:20px; font-size:14px; color:#ddd;">向上滑动，查看精彩演出</p>
-        </div>
-        <div class="arrow-up"></div>
-    </section>
-
-
-    <section class="page">
-        <div class="bg-layer" style="background-image: url('1.jpg');"></div>
-        
-        <div class="video-wrapper">
-            <video controls playsinline poster="1.jpg" src="v1.mp4"></video>
+        <div class="bio-quote" data-aos="fade-up">
+            从事犬只行为研究多年，训练犬只上百只。我擅长将<b>科学性与趣味性</b>结合，改变犬只的思维与意识，从而塑造行为。致力于把专业技术引入百姓生活，实现人与爱宠的零障碍沟通。
         </div>
 
-        <div class="text-box">
-            <h2>综艺盛典开场秀 ✨</h2>
-            <p>这是我们在央视舞台的首次亮相，毛毛完美的配合赢得了全场掌声。每一个动作背后，都是无数次默契的训练。</p>
-        </div>
-        <div class="arrow-up"></div>
-    </section>
-
-
-    <section class="page">
-        <div class="bg-layer" style="background-image: url('2.jpg');"></div>
-        
-        <div class="video-wrapper">
-            <video controls playsinline poster="2.jpg" src="v2.mp4"></video>
+        <div class="skills-box" data-aos="fade-up" data-aos-delay="100">
+            <span class="skill-tag">服从训练</span>
+            <span class="skill-tag">坏习惯行为纠正</span>
+            <span class="skill-tag">心理疾病调整</span>
+            <span class="skill-tag">个性表演训练</span>
         </div>
 
-        <div class="text-box">
-            <h2>超高难度互动 🚀</h2>
-            <p>没有任何牵引绳，全靠眼神交流。这个飞跃动作是我们最拿手的绝活，展现了狗狗惊人的爆发力。</p>
-        </div>
-        <div class="arrow-up"></div>
-    </section>
-
-
-    <section class="page">
-        <div class="bg-layer" style="background-image: url('3.jpg');"></div>
-        
-        <h2 style="margin-bottom:20px; z-index:2; text-shadow:0 2px 5px #000;">📸 精彩瞬间</h2>
-        
-        <div class="grid-gallery" style="z-index: 2;">
-            <img src="3.jpg" class="grid-img">
-            <img src="4.jpg" class="grid-img">
-            <img src="5.jpg" class="grid-img">
-            <img src="6.jpg" class="grid-img">
-            <img src="7.jpg" class="grid-img">
-            <img src="8.jpg" class="grid-img">
-        </div>
-        
-        <div class="text-box" style="bottom: 40px;">
-            <p>记录每一个闪光的时刻（此区域可上下滑动查看更多图片）</p>
-        </div>
-        <div class="arrow-up"></div>
-    </section>
-
-
-    <section class="page" style="background: #222;">
-        <div class="cover-content">
-            <h2 style="color:#f1c40f; margin-bottom:10px;">期待与您合作</h2>
-            <p style="color:#aaa;">综艺录制 / 商业演出 / 影视指导</p>
+        <div class="timeline">
             
-            <div style="margin: 40px 0;">
-                <h1 style="font-size:36px;">138-XXXX-XXXX</h1>
-                <p style="font-size:12px; color:#666; margin-top:5px;">(微信同号)</p>
+            <div class="timeline-year-group" data-aos="fade-up">
+                <div class="year-label">2018</div>
+                <div class="t-item">
+                    <div class="t-month">1月</div>
+                    <div class="t-event">受邀参加《艺览天下》有趣的奇闻趣事<span class="t-channel">CCTV-3</span></div>
+                </div>
             </div>
 
-            <a href="tel:13800000000" class="btn-call">📞 立即联系</a>
+            <div class="timeline-year-group" data-aos="fade-up">
+                <div class="year-label">2017</div>
+                <div class="t-item">
+                    <div class="t-month">9月</div>
+                    <div class="t-event">受邀参加《向幸福出发》情感访谈<span class="t-channel">CCTV-3</span></div>
+                </div>
+                <div class="t-item">
+                    <div class="t-month">7月</div>
+                    <div class="t-event">《综艺盛典》精彩可爱宠物秀<span class="t-channel">CCTV-3</span></div>
+                </div>
+                <div class="t-item">
+                    <div class="t-month">1月</div>
+                    <div class="t-event">《幸福账单》由朱迅、马跃主持<span class="t-channel">CCTV-3</span></div>
+                </div>
+            </div>
+
+            <div class="timeline-year-group" data-aos="fade-up">
+                <div class="year-label">2016</div>
+                <div class="t-item">
+                    <div class="t-month">12月</div>
+                    <div class="t-event">《黄金100秒》竞技节目<span class="t-channel">CCTV-3</span></div>
+                </div>
+                <div class="t-item">
+                    <div class="t-month">8月</div>
+                    <div class="t-event">《幸福的味道》与明星互动表演<span class="t-channel">北京卫视</span></div>
+                </div>
+                <div class="t-item">
+                    <div class="t-month">6月</div>
+                    <div class="t-event">《好好学习吧》<span class="t-channel">东南卫视</span></div>
+                </div>
+                <div class="t-item">
+                    <div class="t-month">6月</div>
+                    <div class="t-event">《阳光大道》狗狗特工训练营 <strong>荣获第一名</strong><span class="t-channel">CCTV-7</span></div>
+                </div>
+            </div>
+
+            <div class="timeline-more" data-aos="fade-in" data-aos-delay="200">
+                <div class="more-dots">...</div>
+                <div class="more-text">More stories to be continued</div>
+            </div>
+
         </div>
-    </section>
+    </div>
+
+
+    <div class="section-header" data-aos="fade-right">
+        <div class="section-title">TV Showreel</div>
+        <div class="section-desc">节目现场</div>
+    </div>
+    <div class="scroll-wrapper">
+        <div class="video-card" data-aos="fade-left">
+            <video controls poster="https://placehold.co/600x400/222/fff?text=CCTV-7+Champion"><source src="./v1.mp4"></video>
+            <div class="play-btn"></div>
+        </div>
+        <div class="video-card" data-aos="fade-left" data-aos-delay="100">
+            <video controls poster="https://placehold.co/600x400/333/fff?text=Variety+Show"><source src="./v2.mp4"></video>
+            <div class="play-btn"></div>
+        </div>
+        <div class="video-card" data-aos="fade-left" data-aos-delay="200">
+            <video controls poster="https://placehold.co/600x400/444/fff?text=Interaction"><source src="./v3.mp4"></video>
+            <div class="play-btn"></div>
+        </div>
+    </div>
+
+
+    <div class="section-header" data-aos="fade-right">
+        <div class="section-title">Gallery</div>
+        <div class="section-desc">精彩瞬间</div>
+    </div>
+
+    <div class="gallery-grid">
+        <div class="g-item span-wide" data-aos="zoom-in">
+            <img src="https://placehold.co/600x300/eee/999?text=TV+Stage" alt="">
+        </div>
+        <div class="g-item span-tall" data-aos="fade-up" data-aos-delay="100">
+            <img src="https://placehold.co/300x500/eee/999?text=Ren+Xin" alt="">
+        </div>
+        <div class="g-item span-normal" data-aos="fade-left" data-aos-delay="200">
+            <img src="https://placehold.co/300x300/eee/999?text=Dog+1" alt="">
+        </div>
+        <div class="g-item span-normal" data-aos="fade-left" data-aos-delay="300">
+            <img src="https://placehold.co/300x300/eee/999?text=Dog+2" alt="">
+        </div>
+        <div class="g-item span-normal" data-aos="fade-right">
+            <img src="https://placehold.co/300x300/eee/999?text=Training" alt="">
+        </div>
+        <div class="g-item span-normal" data-aos="fade-left">
+            <img src="https://placehold.co/300x300/eee/999?text=Show" alt="">
+        </div>
+        <div class="g-item span-normal" data-aos="fade-up">
+            <img src="https://placehold.co/300x300/eee/999?text=Interaction" alt="">
+        </div>
+        <div class="g-item span-normal" data-aos="fade-up" data-aos-delay="100">
+            <img src="https://placehold.co/300x300/eee/999?text=Award" alt="">
+        </div>
+    </div>
+
+    <div class="end-mark">THANKS FOR WATCHING</div>
 
 </div>
 
+<script src="https://cdn.bootcdn.net/ajax/libs/aos/2.3.4/aos.js"></script>
 <script>
-    // --- 智能脚本：滑动暂停视频 ---
-    // 这个脚本会检测哪个页面现在正显示在屏幕上
-    // 如果视频页面滑走了，它会自动暂停视频，防止声音乱放
-    
-    const videos = document.querySelectorAll('video');
-    const container = document.querySelector('.h5-container');
-
-    // 监听滚动结束
-    let isScrolling;
-    container.addEventListener('scroll', function ( event ) {
-        window.clearTimeout( isScrolling );
-        isScrolling = setTimeout(function() {
-            checkVideoVisibility();
-        }, 100); // 滚动停止100ms后检测
-    }, false);
-
-    function checkVideoVisibility() {
-        videos.forEach(video => {
-            const rect = video.getBoundingClientRect();
-            const windowHeight = window.innerHeight;
-            
-            // 如果视频不在屏幕中心区域，就暂停
-            if (rect.top < 0 || rect.bottom > windowHeight) {
-                video.pause();
-            }
-        });
-    }
+    AOS.init({ duration: 800, easing: 'ease-out-cubic', once: true, offset: 50 });
 </script>
 
 </body>
