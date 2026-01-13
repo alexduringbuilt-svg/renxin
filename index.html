@@ -16,135 +16,107 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--light-bg); color: #333; overflow-x: hidden; }
         
-        .container { max-width: 550px; margin: 0 auto; background: #fff; min-height: 100vh; padding-bottom: 80px; box-shadow: 0 0 50px rgba(0,0,0,0.03); position: relative; }
+        .container { max-width: 550px; margin: 0 auto; background: #fff; min-height: 100vh; padding-bottom: 60px; box-shadow: 0 0 50px rgba(0,0,0,0.03); position: relative; }
 
-        /* --- 1. 顶部 Header (模糊照片背景版) --- */
+        /* --- 1. 顶部 Header (四周虚化 + 中心清晰版) --- */
         header { 
-            height: 220px; /* 稍微给一点高度，让背景更好看 */
-            background: #111; /* 兜底背景色 */
-            color: #fff; 
+            height: 250px; 
             padding: 25px; 
             display: flex; flex-direction: column; justify-content: flex-end; 
             position: relative; 
-            overflow: hidden; /* 关键：裁切掉模糊溢出的边缘 */
+            overflow: hidden; 
+            
+            /* [底图层] 原始清晰照片 */
+            background-image: url('./yetou.png'); 
+            /* 建议用 center center 保证人脸在正中间，配合四周虚化 */
+            background-position: center center; 
+            background-size: cover;
+            z-index: 0;
         }
 
-        /* 1.1 背景层：放照片 + 模糊 */
+        /* [模糊层] 四周虚化 */
         header::before { 
             content: ''; 
             position: absolute; 
             top: 0; left: 0; 
             width: 100%; height: 100%; 
+            z-index: 1;
             
-            /* --- [关键] 请在这里把 'your-photo.jpg' 换成你自己的照片路径 --- */
-            background-image: url('./yetou.png'); 
-            background-position: center center;
-            background-size: cover;
+            /* 加大模糊力度：25px */
+            backdrop-filter: blur(25px); 
+            -webkit-backdrop-filter: blur(25px); 
+
+            /* [关键魔法] 径向蒙版 (Radial Gradient) */
+            /* circle at center: 从中心开始画圆 */
+            /* transparent 25%: 中心 25% 的区域是透明的（即不显示模糊层 -> 显示清晰底图） */
+            /* black 80%: 到 80% 的外围区域变成黑色（即显示模糊层） */
+            /* 效果：中间清晰，向四周逐渐变糊 */
+            -webkit-mask-image: radial-gradient(circle at center, transparent 25%, black 80%);
+            mask-image: radial-gradient(circle at center, transparent 25%, black 80%);
             
-            /* 模糊滤镜：数值越大越模糊 */
-            filter: blur(12px); 
-            /* 稍微放大一点，防止模糊边缘出现白边 */
-            transform: scale(1.1); 
-            z-index: 0;
+            pointer-events: none;
         }
 
-        /* 1.2 遮罩层：加一层半透明黑色，防止字看不清 */
+        /* [暗角层] 底部稍微加黑，保证文字能看清 */
         header::after {
             content: '';
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.4); /* 0.4 代表 40% 的黑色透明度 */
-            z-index: 1;
+            z-index: 2;
+            /* 仅在底部加一点点黑渐变 */
+            background: linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, 0.8) 100%);
+            pointer-events: none;
         }
         
-        /* 内容层：必须在最上面 */
-        .header-content { position: relative; z-index: 2; }
+        /* [内容层] 文字 */
+        .header-content { position: relative; z-index: 3; }
         
-        h1 { margin: 0; font-size: 34px; font-weight: 300; line-height: 1.1; letter-spacing: 1px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        h1 { margin: 0; font-size: 34px; font-weight: 300; line-height: 1.1; letter-spacing: 1px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); color: #fff; }
         h1 strong { font-weight: 800; color: var(--gold); }
-        .subtitle { margin-top: 10px; opacity: 0.9; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; display: flex; align-items: center; text-shadow: 0 1px 5px rgba(0,0,0,0.3); }
+        .subtitle { margin-top: 10px; opacity: 0.95; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; display: flex; align-items: center; color: rgba(255,255,255,0.9); text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
         .subtitle::before { content: ''; width: 15px; height: 1px; background: var(--gold); margin-right: 8px; box-shadow: 0 0 5px var(--gold); }
 
         /* --- 2. 个人简介 --- */
-        .bio-section { padding: 35px 30px 20px; }
-        
-        .bio-quote {
-            font-size: 15px; color: #444; line-height: 1.8; margin-bottom: 20px;
-            text-align: justify; font-weight: 400;
-        }
+        .bio-section { padding: 35px 25px 10px; }
+        .bio-quote { font-size: 14px; color: #444; line-height: 1.8; margin-bottom: 20px; text-align: justify; }
         .skills-box { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 30px; }
-        .skill-tag {
-            background: rgba(212,175,55,0.08); color: #8a7018;
-            padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;
-        }
+        .skill-tag { background: rgba(212,175,55,0.08); color: #8a7018; padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; }
 
-        /* --- 3. 演艺历程时间轴 --- */
-        .timeline { position: relative; padding-left: 10px; }
-        .timeline::before {
-            content: ''; position: absolute; left: 14px; top: 10px; bottom: 20px;
-            width: 1px; background: #eee;
-        }
+        /* --- 3. 紧凑型时间轴 --- */
+        .timeline { position: relative; margin-top: 20px; }
+        .timeline-year-group { display: flex; margin-bottom: 25px; align-items: flex-start; }
+        .year-label { flex: 0 0 50px; font-size: 18px; font-weight: 800; color: #ccc; font-family: Arial, sans-serif; line-height: 1; }
+        .year-content { flex: 1; padding-left: 20px; border-left: 1px solid #eee; padding-bottom: 5px; }
+        .t-item { position: relative; margin-bottom: 12px; }
+        .t-item:last-child { margin-bottom: 0; }
+        .t-item::before { content: ''; position: absolute; left: -25px; top: 5px; width: 9px; height: 9px; background: #fff; border: 2px solid var(--gold); border-radius: 50%; z-index: 2; }
+        .t-month { font-size: 12px; color: var(--gold); font-weight: bold; display: inline-block; margin-right: 5px;}
+        .t-event { font-size: 14px; color: #333; line-height: 1.4; display: inline; }
+        .t-channel { font-size: 12px; color: #999; margin-left: 5px; }
+        .end-mark { text-align: center; margin-top: 30px; margin-bottom: 10px; font-size: 12px; color: #ccc; letter-spacing: 2px; }
 
-        .timeline-year-group { margin-bottom: 30px; position: relative; }
-
-        .year-label {
-            font-size: 24px; font-weight: 900; color: #eee;
-            position: absolute; left: -10px; top: -15px; z-index: 0;
-            font-family: Arial, sans-serif; letter-spacing: -1px;
-        }
-        
-        .t-item { position: relative; z-index: 1; margin-bottom: 18px; padding-left: 25px; }
-        .t-item::after {
-            content: ''; position: absolute; left: 0; top: 6px;
-            width: 9px; height: 9px; background: #fff; border: 2px solid var(--gold);
-            border-radius: 50%;
-        }
-
-        .t-month { font-size: 12px; color: var(--gold); font-weight: bold; margin-bottom: 2px; }
-        .t-event { font-size: 14px; color: #333; line-height: 1.5; font-weight: 500; }
-        .t-channel { font-size: 12px; color: #999; margin-left: 5px; font-weight: normal; }
-
-        /* 未完待续样式 */
-        .timeline-more {
-            position: relative;
-            padding-left: 28px;
-            margin-top: -10px;
-            padding-bottom: 10px;
-        }
-        .timeline-more::before {
-            content: ''; position: absolute; left: 14px; top: -20px; height: 35px;
-            width: 1px; border-left: 2px dashed #ddd; 
-            background: none;
-        }
-        .more-dots { color: #ccc; font-size: 24px; line-height: 10px; letter-spacing: 4px; }
-        .more-text { font-size: 12px; color: #bbb; margin-top: 5px; font-style: italic; }
-
-
-        /* --- 4. 视频 & 图片通用 --- */
-        .section-header { padding: 30px 20px 20px; display: flex; align-items: baseline; justify-content: space-between; border-top: 1px solid #f5f5f5; margin-top: 10px; }
-        .section-title { font-size: 20px; font-weight: 800; color: var(--dark); }
+        /* --- 4. 视频 & 图片 --- */
+        .section-header { padding: 25px 20px 15px; display: flex; align-items: baseline; justify-content: space-between; border-top: 1px solid #f9f9f9; margin-top: 10px; }
+        .section-title { font-size: 18px; font-weight: 800; color: var(--dark); }
         .section-desc { font-size: 12px; color: #999; font-style: italic; }
 
-        /* 视频横滑 */
         .scroll-wrapper { display: flex; overflow-x: auto; gap: 15px; padding: 0 20px 30px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
         .scroll-wrapper::-webkit-scrollbar { display: none; }
         .video-card { flex: 0 0 85%; scroll-snap-align: center; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.08); position: relative; background: #000; }
-        .video-card video { width: 100%; height: 200px; object-fit: cover; display: block; }
+        .video-card video { width: 100%; height: 180px; object-fit: cover; display: block; }
         .play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; background: rgba(255,255,255,0.3); border-radius: 50%; backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; pointer-events: none; }
         .play-btn::after { content: ''; border-left: 12px solid #fff; border-top: 8px solid transparent; border-bottom: 8px solid transparent; margin-left: 4px; }
 
-        /* 拼贴画廊 */
-        .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 20px; grid-auto-flow: dense; }
+        .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 20px; grid-auto-flow: dense; }
         .g-item { position: relative; border-radius: 6px; overflow: hidden; background: #eee; }
         .g-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.8s ease; }
         .g-item:active img { transform: scale(1.1); }
-        .span-wide { grid-column: span 2; height: 200px; }
+        .span-wide { grid-column: span 2; height: 180px; }
         .span-tall { grid-row: span 2; height: 100%; }
-        .span-normal { height: 150px; }
-
-        /* 底部 */
-        .end-mark { text-align: center; margin-top: 60px; color: #ddd; font-size: 10px; letter-spacing: 2px; }
+        .span-normal { height: 140px; }
+        
+        footer { padding: 40px 0; text-align: center; color: #ddd; font-size: 10px; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -159,7 +131,6 @@
     </header>
 
     <div class="bio-section">
-        
         <div class="bio-quote" data-aos="fade-up">
             从事犬只行为研究多年，训练犬只上百只。我擅长将<b>科学性与趣味性</b>结合，改变犬只的思维与意识，从而塑造行为。致力于把专业技术引入百姓生活，实现人与爱宠的零障碍沟通。
         </div>
@@ -172,59 +143,56 @@
         </div>
 
         <div class="timeline">
-            
             <div class="timeline-year-group" data-aos="fade-up">
                 <div class="year-label">2018</div>
-                <div class="t-item">
-                    <div class="t-month">1月</div>
-                    <div class="t-event">受邀参加《艺览天下》有趣的奇闻趣事<span class="t-channel">CCTV-3</span></div>
+                <div class="year-content">
+                    <div class="t-item">
+                        <span class="t-month">1月</span>
+                        <div class="t-event">受邀参加《艺览天下》奇闻趣事 <span class="t-channel">CCTV-3</span></div>
+                    </div>
                 </div>
             </div>
-
             <div class="timeline-year-group" data-aos="fade-up">
                 <div class="year-label">2017</div>
-                <div class="t-item">
-                    <div class="t-month">9月</div>
-                    <div class="t-event">受邀参加《向幸福出发》情感访谈<span class="t-channel">CCTV-3</span></div>
-                </div>
-                <div class="t-item">
-                    <div class="t-month">7月</div>
-                    <div class="t-event">《综艺盛典》精彩可爱宠物秀<span class="t-channel">CCTV-3</span></div>
-                </div>
-                <div class="t-item">
-                    <div class="t-month">1月</div>
-                    <div class="t-event">《幸福账单》由朱迅、马跃主持<span class="t-channel">CCTV-3</span></div>
+                <div class="year-content">
+                    <div class="t-item">
+                        <span class="t-month">9月</span>
+                        <div class="t-event">《向幸福出发》情感访谈 <span class="t-channel">CCTV-3</span></div>
+                    </div>
+                    <div class="t-item">
+                        <span class="t-month">7月</span>
+                        <div class="t-event">《综艺盛典》宠物秀 <span class="t-channel">CCTV-3</span></div>
+                    </div>
+                    <div class="t-item">
+                        <span class="t-month">1月</span>
+                        <div class="t-event">《幸福账单》竞技节目 <span class="t-channel">CCTV-3</span></div>
+                    </div>
                 </div>
             </div>
-
             <div class="timeline-year-group" data-aos="fade-up">
                 <div class="year-label">2016</div>
-                <div class="t-item">
-                    <div class="t-month">12月</div>
-                    <div class="t-event">《黄金100秒》竞技节目<span class="t-channel">CCTV-3</span></div>
-                </div>
-                <div class="t-item">
-                    <div class="t-month">8月</div>
-                    <div class="t-event">《幸福的味道》与明星互动表演<span class="t-channel">北京卫视</span></div>
-                </div>
-                <div class="t-item">
-                    <div class="t-month">6月</div>
-                    <div class="t-event">《好好学习吧》<span class="t-channel">东南卫视</span></div>
-                </div>
-                <div class="t-item">
-                    <div class="t-month">6月</div>
-                    <div class="t-event">《阳光大道》狗狗特工训练营 <strong>荣获第一名</strong><span class="t-channel">CCTV-7</span></div>
+                <div class="year-content">
+                    <div class="t-item">
+                        <span class="t-month">12月</span>
+                        <div class="t-event">《黄金100秒》竞技节目 <span class="t-channel">CCTV-3</span></div>
+                    </div>
+                    <div class="t-item">
+                        <span class="t-month">8月</span>
+                        <div class="t-event">《幸福的味道》互动表演 <span class="t-channel">北京卫视</span></div>
+                    </div>
+                    <div class="t-item">
+                        <span class="t-month">6月</span>
+                        <div class="t-event">《好好学习吧》 <span class="t-channel">东南卫视</span></div>
+                    </div>
+                    <div class="t-item">
+                        <span class="t-month">6月</span>
+                        <div class="t-event">《阳光大道》特工训练营 <strong>冠军</strong> <span class="t-channel">CCTV-7</span></div>
+                    </div>
                 </div>
             </div>
-
-            <div class="timeline-more" data-aos="fade-in" data-aos-delay="200">
-                <div class="more-dots">...</div>
-                <div class="more-text">More stories to be continued</div>
-            </div>
-
+            <div class="end-mark">· END ·</div>
         </div>
     </div>
-
 
     <div class="section-header" data-aos="fade-right">
         <div class="section-title">TV Showreel</div>
@@ -245,12 +213,10 @@
         </div>
     </div>
 
-
     <div class="section-header" data-aos="fade-right">
         <div class="section-title">Gallery</div>
         <div class="section-desc">精彩瞬间</div>
     </div>
-
     <div class="gallery-grid">
         <div class="g-item span-wide" data-aos="zoom-in">
             <img src="https://placehold.co/600x300/eee/999?text=TV+Stage" alt="">
@@ -278,8 +244,7 @@
         </div>
     </div>
 
-    <div class="end-mark">THANKS FOR WATCHING</div>
-
+    <footer>THANKS FOR WATCHING</footer>
 </div>
 
 <script src="https://cdn.bootcdn.net/ajax/libs/aos/2.3.4/aos.js"></script>
@@ -289,5 +254,3 @@
 
 </body>
 </html>
-
-
