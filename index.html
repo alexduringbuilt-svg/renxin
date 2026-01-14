@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>任鑫 - 个人简介</title>
     <link href="https://cdn.bootcdn.net/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css" rel="stylesheet">
     
     <style>
         /* --- 0. 基础设定 --- */
@@ -56,84 +57,52 @@
         .video-card { flex: 0 0 88%; height: 200px; scroll-snap-align: center; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.08); position: relative; background: #000; }
         .video-card iframe { width: 100%; height: 100%; border: none; display: block; }
 
-        /* --- 4. Gallery (相册 - 新增折叠功能) --- */
-        .album-wrapper { padding: 0 20px; }
+        /* --- 4. Gallery (单一大相册 - 卡片特效) --- */
+        .album-wrapper { padding: 0 40px 40px; /* 增加左右内边距，给卡片旋转留空间 */ }
         
-        /* 折叠控件样式 */
-        details {
-            margin-bottom: 15px;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-            overflow: hidden;
-            border: 1px solid #eee;
+        .swiper {
+            width: 100%;
+            padding-top: 10px;
+            padding-bottom: 40px; /* 底部给分页器留空 */
+            overflow: visible; /* 允许卡片阴影溢出容器，视觉更震撼 */
         }
-        
-        details[open] { padding-bottom: 15px; }
 
-        summary {
-            padding: 15px;
-            font-size: 15px;
-            font-weight: bold;
-            color: var(--dark);
-            cursor: pointer;
-            list-style: none; /* 隐藏默认三角 */
+        .swiper-slide {
+            background-color: #000;
+            border-radius: 18px;
+            /* 设定一个固定高度，让卡片整齐 */
+            height: 400px; 
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #fafafa;
-            transition: background 0.3s;
-        }
-        
-        summary::-webkit-details-marker { display: none; } /* 兼容Safari */
-        
-        summary:active { background: #f0f0f0; }
-        
-        /* 自定义加号/减号图标 */
-        summary::after {
-            content: '+';
-            font-size: 20px;
-            color: var(--gold);
-            font-weight: 300;
-        }
-        
-        details[open] summary::after { content: '-'; }
-        details[open] summary { border-bottom: 1px solid #eee; margin-bottom: 15px; }
-
-        /* 图片网格 */
-        .gallery-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; padding: 0 10px; }
-        .g-item { position: relative; overflow: hidden; background: #eee; aspect-ratio: 1 / 1; cursor: zoom-in; }
-        .g-wide { grid-column: span 2; aspect-ratio: 2 / 1; } /* 偶尔出现的宽图 */
-        .g-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        
-        /* --- 5. Lightbox (点击放大全屏) --- */
-        #lightbox {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 9999;
-            display: none;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
-            backdrop-filter: blur(10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15); /* 强烈的阴影 */
+            overflow: hidden;
         }
-        #lightbox img {
-            max-width: 100%;
-            max-height: 80%;
-            object-fit: contain;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            transition: transform 0.3s;
+
+        .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            /* contain: 保证图片完整显示，不裁切人脸 */
+            /* cover: 如果你更喜欢填满不留黑边，可以改成 cover */
+            object-fit: contain; 
         }
-        #lightbox-close {
-            margin-top: 20px;
-            color: #fff;
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-size: 14px;
-            cursor: pointer;
+
+        /* 优化导航按钮 */
+        .swiper-button-next, .swiper-button-prev {
+            color: #fff !important;
+            background: rgba(212, 175, 55, 0.8);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
         }
+        .swiper-button-next:after, .swiper-button-prev:after { font-size: 16px; font-weight: bold; }
+        
+        /* 优化分页小点 */
+        .swiper-pagination-bullet { background: #ccc; opacity: 0.6; }
+        .swiper-pagination-bullet-active { background: var(--gold) !important; opacity: 1; width: 20px; border-radius: 5px; transition: width 0.3s; }
 
         footer { padding: 40px 0; text-align: center; color: #ddd; font-size: 10px; letter-spacing: 1px; }
     </style>
@@ -155,7 +124,7 @@
         </div>
 
         <div class="bio-featured-video" data-aos="fade-up" data-aos-delay="50">
-            <iframe src="https://player.bilibili.com/player.html?isOutside=true&aid=115891958254108&bvid=BV1dnrnB9EUk&cid=35376398788&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+            <iframe src="https://player.bilibili.com/player.html?isOutside=true&aid=115891958254108&bvid=BV1dnrnB9EUk&cid=35376398788&p=1&autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
         </div>
 
         <div class="skills-box" data-aos="fade-up" data-aos-delay="100">
@@ -167,8 +136,8 @@
     </div>
 
     <div class="section-header" data-aos="fade-right">
-        <div class="section-title">更多视频</div>
-        <div class="section-desc">向左滑动</div>
+        <div class="section-title">TV Showreel</div>
+        <div class="section-desc">更多现场</div>
     </div>
     
     <div class="scroll-wrapper">
@@ -181,95 +150,85 @@
     </div>
 
     <div class="section-header" data-aos="fade-right">
-        <div class="section-title">折叠相册</div>
-        <div class="section-desc">精彩瞬间 (点+号浏览更多)</div>
+        <div class="section-title">Gallery</div>
+        <div class="section-desc">精彩瞬间 (36张)</div>
     </div>
 
-    <div class="album-wrapper">
-        
-        <details open data-aos="fade-up">
-            <summary>🏆 央视高光时刻 </summary>
-            <div class="gallery-grid">
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img23.jpg" alt=""></div> <div class="g-item" onclick="openLightbox(this)"><img src="./img30.jpg" alt=""></div> <div class="g-item" onclick="openLightbox(this)"><img src="./img22.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img1.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img2.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img3.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img4.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img5.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img6.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img7.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img8.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img9.jpg" alt=""></div>
+    <div class="album-wrapper" data-aos="fade-up">
+        <div class="swiper mainGallery">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="./img23.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img30.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img22.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                
+                <div class="swiper-slide"><img src="./img1.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img2.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img3.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img4.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img5.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img6.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img7.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img8.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img9.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img10.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img11.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img12.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img13.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img14.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img15.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img16.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img17.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img18.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img19.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img20.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img21.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img24.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img25.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img26.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img27.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img28.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img29.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img31.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img32.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img33.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img34.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img35.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
+                <div class="swiper-slide"><img src="./img36.jpg" onerror="this.parentElement.style.display='none'" alt=""></div>
             </div>
-        </details>
-
-        <details data-aos="fade-up" data-aos-delay="100">
-            <summary>🌟 明星互动 & 综艺 </summary>
-            <div class="gallery-grid">
-                 <div class="g-item g-wide" onclick="openLightbox(this)"><img src="./img31.jpg" alt="大合影"></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img27.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img25.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img29.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img10.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img11.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img12.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img13.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img14.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img15.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img16.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img17.jpg" alt=""></div>
-            </div>
-        </details>
-
-        <details data-aos="fade-up" data-aos-delay="200">
-            <summary>🐾 幕后 & 训练花絮 </summary>
-            <div class="gallery-grid">
-                 <div class="g-item" onclick="openLightbox(this)"><img src="./img26.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img28.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img24.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img18.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img19.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img20.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img21.jpg" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img32.jpg" onerror="this.style.display='none'" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img33.jpg" onerror="this.style.display='none'" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img34.jpg" onerror="this.style.display='none'" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img35.jpg" onerror="this.style.display='none'" alt=""></div>
-                <div class="g-item" onclick="openLightbox(this)"><img src="./img36.jpg" onerror="this.style.display='none'" alt=""></div>
-            </div>
-        </details>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
     </div>
 
     <footer>THANKS FOR WATCHING</footer>
 </div>
 
-<div id="lightbox" onclick="closeLightbox()">
-    <img id="lightbox-img" src="" alt="Full Image">
-    <div id="lightbox-close">点击任意处关闭</div>
-</div>
-
 <script src="https://cdn.bootcdn.net/ajax/libs/aos/2.3.4/aos.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"></script>
+
 <script>
     AOS.init({ duration: 800, easing: 'ease-out-cubic', once: true, offset: 50 });
 
-    // 灯箱功能脚本
-    function openLightbox(element) {
-        var imgSrc = element.querySelector('img').src;
-        var lightbox = document.getElementById('lightbox');
-        var lightboxImg = document.getElementById('lightbox-img');
-        
-        lightboxImg.src = imgSrc;
-        lightbox.style.display = 'flex';
-        // 禁止背景滚动
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeLightbox() {
-        var lightbox = document.getElementById('lightbox');
-        lightbox.style.display = 'none';
-        // 恢复背景滚动
-        document.body.style.overflow = 'auto';
-    }
+    // 初始化卡片特效幻灯片
+    new Swiper(".mainGallery", {
+        effect: "cards", // 核心：开启卡片堆叠特效
+        grabCursor: true, // 鼠标抓手
+        loop: true,       // 循环播放
+        cardsEffect: {
+            perSlideOffset: 8, // 每张卡片的偏移量
+            perSlideRotate: 2, // 每张卡片的旋转角度
+            slideShadows: true, // 开启阴影
+        },
+        pagination: {
+            el: ".swiper-pagination",
+            dynamicBullets: true, // 分页点太多时自动缩放，保持美观
+        },
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+    });
 </script>
 
 </body>
