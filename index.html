@@ -13,38 +13,58 @@
         body { margin: 0; font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--light-bg); color: #333; overflow-x: hidden; }
         .container { max-width: 550px; margin: 0 auto; background: #fff; min-height: 100vh; padding-bottom: 60px; box-shadow: 0 0 50px rgba(0,0,0,0.03); position: relative; }
 
-        /* --- 1. Header --- */
-        header { height: 250px; padding: 25px; display: flex; flex-direction: column; justify-content: flex-end; position: relative; overflow: hidden; background-image: url('./yetou.png'); background-position: center center; background-size: cover; z-index: 0; }
+        /* --- 1. Header (头部) --- */
+        header { 
+            height: 250px; 
+            padding: 25px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: flex-end; 
+            position: relative; 
+            overflow: hidden; 
+            /* 本地图片 yetou.jpg */
+            background-image: url('./yetou.jpg'); 
+            background-position: center center; 
+            background-size: cover; 
+            z-index: 0; 
+        }
+        /* 高强度虚化 (25px) */
         header::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); -webkit-mask-image: radial-gradient(circle at center, transparent 25%, black 80%); mask-image: radial-gradient(circle at center, transparent 25%, black 80%); pointer-events: none; }
+        
         header::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; background: linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, 0.8) 100%); pointer-events: none; }
+        
         .header-content { position: relative; z-index: 3; }
         h1 { margin: 0; font-size: 34px; font-weight: 300; line-height: 1.1; letter-spacing: 1px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); color: #fff; }
         h1 strong { font-weight: 800; color: var(--gold); }
         .subtitle { margin-top: 10px; opacity: 0.95; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; display: flex; align-items: center; color: rgba(255,255,255,0.9); text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
         .subtitle::before { content: ''; width: 15px; height: 1px; background: var(--gold); margin-right: 8px; box-shadow: 0 0 5px var(--gold); }
 
-        /* --- 2. Bio --- */
-        .bio-section { padding: 35px 25px 10px; }
-        .bio-quote { font-size: 14px; color: #444; line-height: 1.8; margin-bottom: 20px; text-align: justify; }
-        .skills-box { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 30px; }
+        /* --- 2. Bio (简介区域) --- */
+        .bio-section { padding: 35px 25px 30px; /* 底部padding稍作增加，因为去掉了timeline */ }
+        .bio-quote { font-size: 14px; color: #444; line-height: 1.8; margin-bottom: 20px; text-align: justify; letter-spacing: 0.5px; }
+        .bio-highlight { color: var(--gold); font-weight: bold; }
+
+        /* 精选视频容器 */
+        .bio-featured-video {
+            margin-bottom: 25px; 
+            border-radius: 12px; 
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
+            border: 1px solid rgba(212, 175, 55, 0.2); 
+            aspect-ratio: 16 / 9; 
+            background: #000;
+        }
+        .bio-featured-video iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+        
+        .skills-box { display: flex; flex-wrap: wrap; gap: 8px; /* margin-bottom: 30px; 不需要太大的底部间距了 */ }
         .skill-tag { background: rgba(212,175,55,0.08); color: #8a7018; padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; }
 
-        /* --- 3. Timeline --- */
-        .timeline { position: relative; margin-top: 20px; }
-        .timeline-year-group { display: flex; margin-bottom: 30px; align-items: flex-start; }
-        .year-label { flex: 0 0 75px; font-size: 18px; font-weight: 800; color: #ccc; font-family: Arial, sans-serif; line-height: 1; }
-        .year-content { flex: 1; padding-left: 30px; border-left: 1px solid #eee; padding-bottom: 5px; }
-        .t-item { position: relative; margin-bottom: 15px; }
-        .t-item:last-child { margin-bottom: 0; }
-        .t-item::before { content: ''; position: absolute; left: -34.5px; top: 5px; width: 9px; height: 9px; background: #fff; border: 2px solid var(--gold); border-radius: 50%; z-index: 2; }
-        .t-month { font-size: 12px; color: var(--gold); font-weight: bold; display: inline-block; margin-right: 8px;}
-        .t-event { font-size: 14px; color: #333; line-height: 1.5; display: inline; }
-        .t-channel { font-size: 12px; color: #999; margin-left: 5px; }
-        .timeline-end-text { position: relative; padding-left: 105px; margin-top: -10px; }
-        .timeline-end-text::before { content: ''; position: absolute; left: 75px; top: -20px; width: 1px; height: 35px; background: linear-gradient(to bottom, #eee 0%, var(--gold) 100%); }
-        .end-text-style { font-family: "Songti SC", "SimSun", "STSong", serif; font-size: 13px; color: #bfa15f; letter-spacing: 2px; font-style: italic; position: relative; top: 5px; }
-
-        /* --- 4. B站视频 --- */
+        /* --- 3. B站视频列表 (Showreel) --- */
         .section-header { padding: 25px 20px 15px; display: flex; align-items: baseline; justify-content: space-between; border-top: 1px solid #f9f9f9; margin-top: 10px; }
         .section-title { font-size: 18px; font-weight: 800; color: var(--dark); }
         .section-desc { font-size: 12px; color: #999; font-style: italic; }
@@ -54,36 +74,11 @@
         .video-card { flex: 0 0 88%; height: 200px; scroll-snap-align: center; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.08); position: relative; background: #000; }
         .video-card iframe { width: 100%; height: 100%; border: none; display: block; }
 
-        /* --- 5. Gallery (板正网格布局) --- */
-        .gallery-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; /* 强制两列 */
-            gap: 10px; 
-            padding: 0 20px; 
-        }
-        
-        .g-item { 
-            position: relative; 
-            border-radius: 8px; 
-            overflow: hidden; 
-            background: #eee;
-            /* 默认正方形比例，保证整齐 */
-            aspect-ratio: 1 / 1; 
-        }
-        
-        /* [核心] 横图样式：跨两列 + 16:9 比例 */
-        .g-wide {
-            grid-column: span 2; 
-            aspect-ratio: 16 / 9; /* 宽屏比例 */
-        }
-        
-        .g-item img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; /* 关键：自动裁剪填满，不留白，不变形 */
-            display: block; 
-            transition: transform 0.8s ease; 
-        }
+        /* --- 4. Gallery (照片墙) --- */
+        .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 20px; }
+        .g-item { position: relative; border-radius: 8px; overflow: hidden; background: #eee; aspect-ratio: 1 / 1; }
+        .g-wide { grid-column: span 2; aspect-ratio: 16 / 9; }
+        .g-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.8s ease; }
         .g-item:active img { transform: scale(1.1); }
         
         footer { padding: 40px 0; text-align: center; color: #ddd; font-size: 10px; letter-spacing: 1px; }
@@ -101,59 +96,37 @@
 
     <div class="bio-section">
         <div class="bio-quote" data-aos="fade-up">
-            从事犬只行为研究多年，训练犬只上百只。我擅长将<b>科学性与趣味性</b>结合，改变犬只的思维与意识，从而塑造行为。致力于把专业技术引入百姓生活，实现人与爱宠的零障碍沟通。
+            大家好我是中国宠物达人、<b>中央电视台特约嘉宾</b>及中国明星帮成员。多年来，我带领着多才多艺的“小萌宠”们，以惊艳的特技和默契的配合，在荧幕上留下了无数爆笑与感动的瞬间。<br><br>
+            我的足迹遍布央视及各大卫视：不仅问鼎CCTV-7《阳光大道》<b>冠军</b>，更在CCTV-3《黄金100秒》、《幸福账单》、《综艺盛典》及《向幸福出发》等王牌节目中大放异彩。此外，我还受邀录制北京卫视《幸福的味道》、东南卫视《好好学习吧》以及吉林卫视《高手在民间》。我与我的<span class="bio-highlight">“小精灵们”</span>始终致力于展现人宠间的零障碍沟通，用实力与可爱萌翻全场。
         </div>
+
+        <div class="bio-featured-video" data-aos="fade-up" data-aos-delay="50">
+            <iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115891958254108&bvid=BV1dnrnB9EUk&cid=35376398788&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></iframe>
+        </div>
+
         <div class="skills-box" data-aos="fade-up" data-aos-delay="100">
             <span class="skill-tag">服从训练</span>
             <span class="skill-tag">坏习惯行为纠正</span>
             <span class="skill-tag">心理疾病调整</span>
             <span class="skill-tag">个性表演训练</span>
         </div>
-
-        <div class="timeline">
-            <div class="timeline-year-group" data-aos="fade-up">
-                <div class="year-label">2016</div>
-                <div class="year-content">
-                    <div class="t-item"><span class="t-month">6月</span><div class="t-event">《阳光大道》特工训练营 <strong>冠军</strong> <span class="t-channel">CCTV-7</span></div></div>
-                    <div class="t-item"><span class="t-month">6月</span><div class="t-event">《好好学习吧》 <span class="t-channel">东南卫视</span></div></div>
-                    <div class="t-item"><span class="t-month">8月</span><div class="t-event">《幸福的味道》互动表演 <span class="t-channel">北京卫视</span></div></div>
-                    <div class="t-item"><span class="t-month">12月</span><div class="t-event">《黄金100秒》竞技节目 <span class="t-channel">CCTV-3</span></div></div>
-                </div>
-            </div>
-            <div class="timeline-year-group" data-aos="fade-up">
-                <div class="year-label">2017</div>
-                <div class="year-content">
-                    <div class="t-item"><span class="t-month">1月</span><div class="t-event">《幸福账单》竞技节目 <span class="t-channel">CCTV-3</span></div></div>
-                    <div class="t-item"><span class="t-month">7月</span><div class="t-event">《综艺盛典》宠物秀 <span class="t-channel">CCTV-3</span></div></div>
-                    <div class="t-item"><span class="t-month">9月</span><div class="t-event">《向幸福出发》情感访谈 <span class="t-channel">CCTV-3</span></div></div>
-                </div>
-            </div>
-            <div class="timeline-year-group" data-aos="fade-up">
-                <div class="year-label">2018</div>
-                <div class="year-content">
-                    <div class="t-item"><span class="t-month">1月</span><div class="t-event">受邀参加《艺览天下》奇闻趣事 <span class="t-channel">CCTV-3</span></div></div>
-                </div>
-            </div>
-            <div class="timeline-end-text" data-aos="fade-in">
-                <div class="end-text-style">更多精彩 未完待续...</div>
-            </div>
+        
         </div>
-    </div>
 
     <div class="section-header" data-aos="fade-right">
         <div class="section-title">TV Showreel</div>
-        <div class="section-desc">节目现场</div>
+        <div class="section-desc">更多现场</div>
     </div>
     
     <div class="scroll-wrapper">
-        <div class="video-card" data-aos="fade-left"><iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115888166536474&bvid=BV1iGrjBCERA&cid=35365651956&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></div>
-        <div class="video-card" data-aos="fade-left" data-aos-delay="100"><iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115888317662747&bvid=BV1u8rjBAEAK&cid=35365652334&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></iframe></div>
-        <div class="video-card" data-aos="fade-left" data-aos-delay="200"><iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115888317530419&bvid=BV1b8rjBwEJg&cid=35365652547&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></iframe></div>
-        <div class="video-card" data-aos="fade-left" data-aos-delay="300"><iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115888317531453&bvid=BV1b8rjBwEcb&cid=35365652823&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></iframe></div>
-        <div class="video-card" data-aos="fade-left" data-aos-delay="400"><iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115888166536499&bvid=BV1iGrjBCERC&cid=35365652831&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></iframe></div>
-        <div class="video-card" data-aos="fade-left" data-aos-delay="500"><iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115888166535465&bvid=BV1qGrjBCEVY&cid=35365652990&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></iframe></div>
-        <div class="video-card" data-aos="fade-left" data-aos-delay="600"><iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115888166602023&bvid=BV1oGrjBCEsF&cid=35365652879&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></iframe></div>
-        <div class="video-card" data-aos="fade-left" data-aos-delay="700"><iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115888166603298&bvid=BV1oGrjBCEgk&cid=35365653695&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></iframe></div>
+        <div class="video-card" data-aos="fade-left"><iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115891958251846&bvid=BV1onrnB9EJX&cid=35376398703&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></iframe></div>
+        <div class="video-card" data-aos="fade-left" data-aos-delay="100"><iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115891958186349&bvid=BV1inrnB9EQp&cid=35376398869&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></iframe></div>
+        <div class="video-card" data-aos="fade-left" data-aos-delay="200"><iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115891958187105&bvid=BV1inrnB9Ebp&cid=35376398773&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></iframe></div>
+        <div class="video-card" data-aos="fade-left" data-aos-delay="300"><iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115891958188623&bvid=BV1inrnB9EE9&cid=35376398774&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></iframe></div>
+        <div class="video-card" data-aos="fade-left" data-aos-delay="400"><iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115891958188604&bvid=BV1inrnB9EnJ&cid=35376398780&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></iframe></div>
+        <div class="video-card" data-aos="fade-left" data-aos-delay="500"><iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115891958187789&bvid=BV1inrnB9ECK&cid=35376398766&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></iframe></iframe></div>
+        
+    </div>
     </div>
 
     <div class="section-header" data-aos="fade-right">
@@ -162,22 +135,31 @@
     </div>
     <div class="gallery-grid">
         <div class="g-item g-wide" data-aos="fade-up"><img src="./img1.jpg" alt=""></div>
-        
-        <div class="g-item" data-aos="fade-up" data-aos-delay="100"><img src="./img2.jpg" alt=""></div>
-        <div class="g-item" data-aos="fade-up" data-aos-delay="200"><img src="./img3.jpg" alt=""></div>
+        <div class="g-item" data-aos="fade-up"><img src="./img2.jpg" alt=""></div>
+        <div class="g-item" data-aos="fade-up" data-aos-delay="100"><img src="./img3.jpg" alt=""></div>
         <div class="g-item" data-aos="fade-up"><img src="./img4.jpg" alt=""></div>
         <div class="g-item" data-aos="fade-up" data-aos-delay="100"><img src="./img5.jpg" alt=""></div>
-        
-        <div class="g-item g-wide" data-aos="fade-up"><img src="./img10.jpg" alt=""></div>
-        
+
+        <div class="g-item g-wide" data-aos="fade-up"><img src="./img6.jpg" alt=""></div>
         <div class="g-item" data-aos="fade-up"><img src="./img7.jpg" alt=""></div>
         <div class="g-item" data-aos="fade-up" data-aos-delay="100"><img src="./img8.jpg" alt=""></div>
         <div class="g-item" data-aos="fade-up"><img src="./img9.jpg" alt=""></div>
-        <div class="g-item" data-aos="fade-up" data-aos-delay="100"><img src="./img6.jpg" alt=""></div>
-        <div class="g-item" data-aos="fade-up"><img src="./img11.jpg" alt=""></div>
-        <div class="g-item" data-aos="fade-up" data-aos-delay="100"><img src="./img12.jpg" alt=""></div>
-        
-        <div class="g-item g-wide" data-aos="fade-up"><img src="./img13.jpg" alt=""></div>
+        <div class="g-item" data-aos="fade-up" data-aos-delay="100"><img src="./img10.jpg" alt=""></div>
+
+        <div class="g-item g-wide" data-aos="fade-up"><img src="./img11.jpg" alt=""></div>
+        <div class="g-item" data-aos="fade-up"><img src="./img12.jpg" alt=""></div>
+        <div class="g-item" data-aos="fade-up" data-aos-delay="100"><img src="./img13.jpg" alt=""></div>
+        <div class="g-item" data-aos="fade-up"><img src="./img14.jpg" alt=""></div>
+        <div class="g-item" data-aos="fade-up" data-aos-delay="100"><img src="./img15.jpg" alt=""></div>
+
+        <div class="g-item g-wide" data-aos="fade-up"><img src="./img16.jpg" alt=""></div>
+        <div class="g-item" data-aos="fade-up"><img src="./img17.jpg" alt=""></div>
+        <div class="g-item" data-aos="fade-up" data-aos-delay="100"><img src="./img18.jpg" alt=""></div>
+        <div class="g-item" data-aos="fade-up"><img src="./img19.jpg" alt=""></div>
+        <div class="g-item" data-aos="fade-up" data-aos-delay="100"><img src="./img20.jpg" alt=""></div>
+
+        <div class="g-item" data-aos="fade-up"><img src="./img21.jpg" alt=""></div>
+        <div class="g-item" data-aos="fade-up" data-aos-delay="100"><img src="./img22.jpg" alt=""></div>
     </div>
 
     <footer>THANKS FOR WATCHING</footer>
@@ -190,5 +172,3 @@
 
 </body>
 </html>
-
-
