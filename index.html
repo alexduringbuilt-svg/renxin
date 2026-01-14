@@ -22,17 +22,13 @@
             justify-content: flex-end; 
             position: relative; 
             overflow: hidden; 
-            /* 本地图片 yetou.jpg */
             background-image: url('./yetou.jpg'); 
             background-position: center center; 
             background-size: cover; 
             z-index: 0; 
         }
-        /* 高强度虚化 (25px) */
         header::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); -webkit-mask-image: radial-gradient(circle at center, transparent 25%, black 80%); mask-image: radial-gradient(circle at center, transparent 25%, black 80%); pointer-events: none; }
-        
         header::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; background: linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, 0.8) 100%); pointer-events: none; }
-        
         .header-content { position: relative; z-index: 3; }
         h1 { margin: 0; font-size: 34px; font-weight: 300; line-height: 1.1; letter-spacing: 1px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); color: #fff; }
         h1 strong { font-weight: 800; color: var(--gold); }
@@ -40,31 +36,17 @@
         .subtitle::before { content: ''; width: 15px; height: 1px; background: var(--gold); margin-right: 8px; box-shadow: 0 0 5px var(--gold); }
 
         /* --- 2. Bio (简介区域) --- */
-        .bio-section { padding: 35px 25px 30px; /* 底部padding稍作增加，因为去掉了timeline */ }
+        .bio-section { padding: 35px 25px 30px; }
         .bio-quote { font-size: 14px; color: #444; line-height: 1.8; margin-bottom: 20px; text-align: justify; letter-spacing: 0.5px; }
         .bio-highlight { color: var(--gold); font-weight: bold; }
 
-        /* 精选视频容器 */
-        .bio-featured-video {
-            margin-bottom: 25px; 
-            border-radius: 12px; 
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
-            border: 1px solid rgba(212, 175, 55, 0.2); 
-            aspect-ratio: 16 / 9; 
-            background: #000;
-        }
-        .bio-featured-video iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-        }
+        .bio-featured-video { margin-bottom: 25px; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid rgba(212, 175, 55, 0.2); aspect-ratio: 16 / 9; background: #000; }
+        .bio-featured-video iframe { width: 100%; height: 100%; border: none; display: block; }
         
-        .skills-box { display: flex; flex-wrap: wrap; gap: 8px; /* margin-bottom: 30px; 不需要太大的底部间距了 */ }
+        .skills-box { display: flex; flex-wrap: wrap; gap: 8px; }
         .skill-tag { background: rgba(212,175,55,0.08); color: #8a7018; padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; }
 
-        /* --- 3. B站视频列表 (Showreel) --- */
+        /* --- 3. B站视频列表 --- */
         .section-header { padding: 25px 20px 15px; display: flex; align-items: baseline; justify-content: space-between; border-top: 1px solid #f9f9f9; margin-top: 10px; }
         .section-title { font-size: 18px; font-weight: 800; color: var(--dark); }
         .section-desc { font-size: 12px; color: #999; font-style: italic; }
@@ -74,13 +56,85 @@
         .video-card { flex: 0 0 88%; height: 200px; scroll-snap-align: center; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.08); position: relative; background: #000; }
         .video-card iframe { width: 100%; height: 100%; border: none; display: block; }
 
-        /* --- 4. Gallery (照片墙) --- */
-        .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 20px; }
-        .g-item { position: relative; border-radius: 8px; overflow: hidden; background: #eee; aspect-ratio: 1 / 1; }
-        .g-wide { grid-column: span 2; aspect-ratio: 16 / 9; }
-        .g-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.8s ease; }
-        .g-item:active img { transform: scale(1.1); }
+        /* --- 4. Gallery (相册 - 新增折叠功能) --- */
+        .album-wrapper { padding: 0 20px; }
         
+        /* 折叠控件样式 */
+        details {
+            margin-bottom: 15px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+        
+        details[open] { padding-bottom: 15px; }
+
+        summary {
+            padding: 15px;
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--dark);
+            cursor: pointer;
+            list-style: none; /* 隐藏默认三角 */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fafafa;
+            transition: background 0.3s;
+        }
+        
+        summary::-webkit-details-marker { display: none; } /* 兼容Safari */
+        
+        summary:active { background: #f0f0f0; }
+        
+        /* 自定义加号/减号图标 */
+        summary::after {
+            content: '+';
+            font-size: 20px;
+            color: var(--gold);
+            font-weight: 300;
+        }
+        
+        details[open] summary::after { content: '-'; }
+        details[open] summary { border-bottom: 1px solid #eee; margin-bottom: 15px; }
+
+        /* 图片网格 */
+        .gallery-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; padding: 0 10px; }
+        .g-item { position: relative; overflow: hidden; background: #eee; aspect-ratio: 1 / 1; cursor: zoom-in; }
+        .g-wide { grid-column: span 2; aspect-ratio: 2 / 1; } /* 偶尔出现的宽图 */
+        .g-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        
+        /* --- 5. Lightbox (点击放大全屏) --- */
+        #lightbox {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+        }
+        #lightbox img {
+            max-width: 100%;
+            max-height: 80%;
+            object-fit: contain;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            transition: transform 0.3s;
+        }
+        #lightbox-close {
+            margin-top: 20px;
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
         footer { padding: 40px 0; text-align: center; color: #ddd; font-size: 10px; letter-spacing: 1px; }
     </style>
 </head>
@@ -96,12 +150,12 @@
 
     <div class="bio-section">
         <div class="bio-quote" data-aos="fade-up">
-            大家好我是中国宠物达人、<b>中央电视台特约嘉宾</b>及中国明星帮成员。多年来，我带领着多才多艺的“小萌宠”们，以惊艳的特技和默契的配合，在荧幕上留下了无数爆笑与感动的瞬间。<br><br>
+            我是中国宠物达人、<b>中央电视台特约嘉宾</b>及中国明星帮成员。多年来，我带领着多才多艺的“小萌宠”们，以惊艳的特技和默契的配合，在荧幕上留下了无数爆笑与感动的瞬间。<br><br>
             我的足迹遍布央视及各大卫视：不仅问鼎CCTV-7《阳光大道》<b>冠军</b>，更在CCTV-3《黄金100秒》、《幸福账单》、《综艺盛典》及《向幸福出发》等王牌节目中大放异彩。此外，我还受邀录制北京卫视《幸福的味道》、东南卫视《好好学习吧》以及吉林卫视《高手在民间》。我与我的<span class="bio-highlight">“小精灵们”</span>始终致力于展现人宠间的零障碍沟通，用实力与可爱萌翻全场。
         </div>
 
         <div class="bio-featured-video" data-aos="fade-up" data-aos-delay="50">
-            <iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115891958254108&bvid=BV1dnrnB9EUk&cid=35376398788&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></iframe>
+            <iframe src="https://player.bilibili.com/player.html?isOutside=true&aid=115891958254108&bvid=BV1dnrnB9EUk&cid=35376398788&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
         </div>
 
         <div class="skills-box" data-aos="fade-up" data-aos-delay="100">
@@ -110,64 +164,112 @@
             <span class="skill-tag">心理疾病调整</span>
             <span class="skill-tag">个性表演训练</span>
         </div>
-        
-        </div>
+    </div>
 
     <div class="section-header" data-aos="fade-right">
-        <div class="section-title">TV Showreel</div>
-        <div class="section-desc">更多现场</div>
+        <div class="section-title">更多视频</div>
+        <div class="section-desc">向左滑动</div>
     </div>
     
     <div class="scroll-wrapper">
-        <div class="video-card" data-aos="fade-left"><iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115891958251846&bvid=BV1onrnB9EJX&cid=35376398703&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></iframe></div>
-        <div class="video-card" data-aos="fade-left" data-aos-delay="100"><iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115891958186349&bvid=BV1inrnB9EQp&cid=35376398869&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></iframe></div>
-        <div class="video-card" data-aos="fade-left" data-aos-delay="200"><iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115891958187105&bvid=BV1inrnB9Ebp&cid=35376398773&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></iframe></div>
-        <div class="video-card" data-aos="fade-left" data-aos-delay="300"><iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115891958188623&bvid=BV1inrnB9EE9&cid=35376398774&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></iframe></div>
-        <div class="video-card" data-aos="fade-left" data-aos-delay="400"><iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115891958188604&bvid=BV1inrnB9EnJ&cid=35376398780&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></iframe></div>
-        <div class="video-card" data-aos="fade-left" data-aos-delay="500"><iframe src="//player.bilibili.com/player.html?isOutside=true&aid=115891958187789&bvid=BV1inrnB9ECK&cid=35376398766&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></iframe></iframe></div>
-        
-    </div>
+        <div class="video-card" data-aos="fade-left"><iframe src="https://player.bilibili.com/player.html?isOutside=true&aid=115891958251846&bvid=BV1onrnB9EJX&cid=35376398703&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></div>
+        <div class="video-card" data-aos="fade-left" data-aos-delay="100"><iframe src="https://player.bilibili.com/player.html?isOutside=true&aid=115891958186349&bvid=BV1inrnB9EQp&cid=35376398869&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></div>
+        <div class="video-card" data-aos="fade-left" data-aos-delay="200"><iframe src="https://player.bilibili.com/player.html?isOutside=true&aid=115891958187105&bvid=BV1inrnB9Ebp&cid=35376398773&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></div>
+        <div class="video-card" data-aos="fade-left" data-aos-delay="300"><iframe src="https://player.bilibili.com/player.html?isOutside=true&aid=115891958188623&bvid=BV1inrnB9EE9&cid=35376398774&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></div>
+        <div class="video-card" data-aos="fade-left" data-aos-delay="400"><iframe src="https://player.bilibili.com/player.html?isOutside=true&aid=115891958188604&bvid=BV1inrnB9EnJ&cid=35376398780&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></div>
+        <div class="video-card" data-aos="fade-left" data-aos-delay="500"><iframe src="https://player.bilibili.com/player.html?isOutside=true&aid=115891958187789&bvid=BV1inrnB9ECK&cid=35376398766&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe></div>
     </div>
 
     <div class="section-header" data-aos="fade-right">
-        <div class="section-title">Gallery</div>
-        <div class="section-desc">精彩瞬间</div>
+        <div class="section-title">折叠相册</div>
+        <div class="section-desc">精彩瞬间 (点+号浏览更多)</div>
     </div>
-    <div class="gallery-grid">
-        <div class="g-item g-wide" data-aos="fade-up"><img src="./img1.jpg" alt=""></div>
-        <div class="g-item" data-aos="fade-up"><img src="./img2.jpg" alt=""></div>
-        <div class="g-item" data-aos="fade-up" data-aos-delay="100"><img src="./img3.jpg" alt=""></div>
-        <div class="g-item" data-aos="fade-up"><img src="./img4.jpg" alt=""></div>
-        <div class="g-item" data-aos="fade-up" data-aos-delay="100"><img src="./img5.jpg" alt=""></div>
 
-        <div class="g-item g-wide" data-aos="fade-up"><img src="./img6.jpg" alt=""></div>
-        <div class="g-item" data-aos="fade-up"><img src="./img7.jpg" alt=""></div>
-        <div class="g-item" data-aos="fade-up" data-aos-delay="100"><img src="./img8.jpg" alt=""></div>
-        <div class="g-item" data-aos="fade-up"><img src="./img9.jpg" alt=""></div>
-        <div class="g-item" data-aos="fade-up" data-aos-delay="100"><img src="./img10.jpg" alt=""></div>
+    <div class="album-wrapper">
+        
+        <details open data-aos="fade-up">
+            <summary>🏆 央视高光时刻 </summary>
+            <div class="gallery-grid">
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img23.jpg" alt=""></div> <div class="g-item" onclick="openLightbox(this)"><img src="./img30.jpg" alt=""></div> <div class="g-item" onclick="openLightbox(this)"><img src="./img22.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img1.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img2.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img3.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img4.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img5.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img6.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img7.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img8.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img9.jpg" alt=""></div>
+            </div>
+        </details>
 
-        <div class="g-item g-wide" data-aos="fade-up"><img src="./img11.jpg" alt=""></div>
-        <div class="g-item" data-aos="fade-up"><img src="./img12.jpg" alt=""></div>
-        <div class="g-item" data-aos="fade-up" data-aos-delay="100"><img src="./img13.jpg" alt=""></div>
-        <div class="g-item" data-aos="fade-up"><img src="./img14.jpg" alt=""></div>
-        <div class="g-item" data-aos="fade-up" data-aos-delay="100"><img src="./img15.jpg" alt=""></div>
+        <details data-aos="fade-up" data-aos-delay="100">
+            <summary>🌟 明星互动 & 综艺 </summary>
+            <div class="gallery-grid">
+                 <div class="g-item g-wide" onclick="openLightbox(this)"><img src="./img31.jpg" alt="大合影"></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img27.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img25.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img29.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img10.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img11.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img12.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img13.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img14.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img15.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img16.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img17.jpg" alt=""></div>
+            </div>
+        </details>
 
-        <div class="g-item g-wide" data-aos="fade-up"><img src="./img16.jpg" alt=""></div>
-        <div class="g-item" data-aos="fade-up"><img src="./img17.jpg" alt=""></div>
-        <div class="g-item" data-aos="fade-up" data-aos-delay="100"><img src="./img18.jpg" alt=""></div>
-        <div class="g-item" data-aos="fade-up"><img src="./img19.jpg" alt=""></div>
-        <div class="g-item" data-aos="fade-up" data-aos-delay="100"><img src="./img20.jpg" alt=""></div>
-
-        <div class="g-item" data-aos="fade-up"><img src="./img21.jpg" alt=""></div>
-        <div class="g-item" data-aos="fade-up" data-aos-delay="100"><img src="./img22.jpg" alt=""></div>
+        <details data-aos="fade-up" data-aos-delay="200">
+            <summary>🐾 幕后 & 训练花絮 </summary>
+            <div class="gallery-grid">
+                 <div class="g-item" onclick="openLightbox(this)"><img src="./img26.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img28.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img24.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img18.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img19.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img20.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img21.jpg" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img32.jpg" onerror="this.style.display='none'" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img33.jpg" onerror="this.style.display='none'" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img34.jpg" onerror="this.style.display='none'" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img35.jpg" onerror="this.style.display='none'" alt=""></div>
+                <div class="g-item" onclick="openLightbox(this)"><img src="./img36.jpg" onerror="this.style.display='none'" alt=""></div>
+            </div>
+        </details>
     </div>
 
     <footer>THANKS FOR WATCHING</footer>
 </div>
 
+<div id="lightbox" onclick="closeLightbox()">
+    <img id="lightbox-img" src="" alt="Full Image">
+    <div id="lightbox-close">点击任意处关闭</div>
+</div>
+
 <script src="https://cdn.bootcdn.net/ajax/libs/aos/2.3.4/aos.js"></script>
 <script>
     AOS.init({ duration: 800, easing: 'ease-out-cubic', once: true, offset: 50 });
+
+    // 灯箱功能脚本
+    function openLightbox(element) {
+        var imgSrc = element.querySelector('img').src;
+        var lightbox = document.getElementById('lightbox');
+        var lightboxImg = document.getElementById('lightbox-img');
+        
+        lightboxImg.src = imgSrc;
+        lightbox.style.display = 'flex';
+        // 禁止背景滚动
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        var lightbox = document.getElementById('lightbox');
+        lightbox.style.display = 'none';
+        // 恢复背景滚动
+        document.body.style.overflow = 'auto';
+    }
 </script>
 
 </body>
